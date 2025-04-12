@@ -1,0 +1,46 @@
+# Build Folders
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio working folder
+.vs/
+
+# Build results
+[Bb]uild/
+[Ll]og/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+
+# Other ignored files
+*.log
+*.tlog
+*.tmp
+*.bak
+*.db
+*.pid
+*.swp
+
+# NuGet packages
+*.nupkg
+*.snupkg
+packages/
+
+# Publish folder
+publish/
+
+# Test results
+TestResults/
+*.coverage
+*.coveragexml
+*.testsettings
+*.vsmdi
+.trx
