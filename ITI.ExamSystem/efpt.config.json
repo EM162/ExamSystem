@@ -1,0 +1,529 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "OnlineExaminationDBContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "ITI.ExamSystem",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[Branch]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Courses]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CourseTracks]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ExamQuestions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Exams]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Intake]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[IntakeBranchTrackUsers]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PublishedExams]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[QuestionChoice]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Questions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Role]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Topics]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Track]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserExam]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Users]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UsersCourses]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UsersExamsQuestions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[assign_user_to_course]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[CorrectExam]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[CreateCourse]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[Delete_CourseTrack]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[DeleteCourse]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[DeleteCourses_ByTrackId]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[DeleteQuestion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[DeleteQuestionChoice]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[DeleteRole]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[DeleteTopic]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[DeleteUser]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[DeleteUserRole]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GenerateExamQuestions]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_all_instructors]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_all_students_with_courses]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_courses_with_student_count]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_students_not_in_course]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetAll_courseTracks]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetAll_Student_ByCourseID]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetAll_Student_ByCourseName]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetAllCourses]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetAllCoursesByinstID]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetAllQuestionChoice]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetAllQuestions]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetAllRoles]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetAllTopics]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetAllUserRoles]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetAllUsers]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetBranchByID]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetBranches]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetBranchesByTrack]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetBranchesTracksByIntake]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetCourseByID]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetCourses_ByTrackId]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetCoursesByInstID]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetCoursesByUserID]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetCourseTopics]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetExamQuestionsAndChoices]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetExamStudentAnswers]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetInstructor_ByCourseID]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetInstructorCoursesWithStudentCount]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetIntakeBranchTrackUserByID]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetIntakeBranchTrackUsers]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetIntakeByID]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetIntakes]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetRoleById]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetStudentCourseGrades]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetStudentsByDepartment]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetTrackByID]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetTracks_ByCourseId]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetTracks]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetTracksByBranch]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetUserById]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetUserRolesByUserID]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetUsersByIntakeBranchTrack]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[Insert_CourseTrack]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[InsertBranch]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[InsertIntake]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[InsertIntakeBranchTrackUser]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[InsertQuestionChoice]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[InsertQuestions]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[InsertRole]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[InsertRoleToUser]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[InsertTopic]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[InsertTrack]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[InsertUser]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_user_from_course_by_role]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[remove_user_from_course]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[SafeDeleteBranch]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[SafeDeleteIntake]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[SafeDeleteIntakeBranchTrackUser]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[SafeDeleteTrack]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[SearchCoursesByName]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_DeleteExam]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_DeleteExamQuestion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_DeleteUserExam]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_DeleteUsersExamsQuestion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_InsertExam]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_InsertExamQuestion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_InsertUserExam]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_InsertUsersExamsQuestion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_ShowExamQuestions]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_ShowExams]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_ShowUserExams]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_ShowUsersExamsQuestions]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_UpdateExam]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_UpdateExamQuestion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_UpdateUserExam]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_UpdateUsersExamsQuestion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[SubmitExamAnswer]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[UpdateBranch]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[UpdateCourse]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[UpdateCourseDuration]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[UpdateCourseName]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[UpdateIntake]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[UpdateIntakeBranchTrackUserManager]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[UpdateQuestion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[UpdateQuestionChoice]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[UpdateRole]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[UpdateTopic]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[UpdateTrack]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[UpdateUser]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[UpdateUserRole]",
+         "ObjectType": 1
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": true,
+   "UseDatabaseNamesForRoutines": true,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false,
+   "UseT4Split": false
+}
