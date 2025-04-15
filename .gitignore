@@ -44,3 +44,4 @@ TestResults/
 *.testsettings
 *.vsmdi
 .trx
+Properties/launchSettings.json
