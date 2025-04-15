@@ -1,0 +1,403 @@
+﻿/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Adjust Main Content for Header and Sidebar */
+.admin-dashboard {
+    margin-top: 60px; /* Match the header height */
+    margin-left: 250px; /* Match the sidebar width */
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    transition: margin 0.3s ease;
+}
+
+.content-container {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+/* Header Styles */
+.header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 250px; /* Match the sidebar width */
+    z-index: 1000;
+    transition: left 0.3s ease;
+}
+.top-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.search-bar {
+    display: flex;
+    gap: 10px;
+}
+.portal{
+    color:black;
+}
+
+    .search-bar input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+.search-bar button {
+    padding: 10px;
+    background-color: #7b61ff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .user-profile img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+
+
+/* Sidebar Styles */
+.sidebar {
+    background-color: #7b61ff; /* Purple color */
+    color: #fff;
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.logo h2 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0 0;
+}
+
+    .sidebar nav ul li {
+        margin-bottom: 10px;
+    }
+
+        .sidebar nav ul li a {
+            display: block;
+            text-decoration: none;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+            .sidebar nav ul li a:hover,
+            .sidebar nav ul li a.active {
+                background-color: #fff; /* Darker purple on hover or active */
+                color: black;
+                border-radius: 20px;
+            }
+
+        .sidebar nav ul li i {
+            margin-right: 10px;
+        }
+.welcome-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    flex: 1 1 calc(25% - 20px);
+    min-width: 300px;
+}
+
+    .welcome-section img {
+        width: 100%;
+        height: auto;
+    }
+
+    .welcome-section h2 {
+        color: #673ab7;
+    }
+
+    .welcome-section p span {
+        color: #ff9800;
+    }
+
+.students-progress {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    flex: 1 1 calc(25% - 20px);
+    min-width: 400px;
+}
+.grading-progress {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    flex: 1 1 calc(25% - 20px);
+    min-width: 400px;
+    overflow-x: auto;
+}
+.create-exam {
+    background-color: #7b61ff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #fff;
+    margin-bottom: 20px;
+    margin-bottom: 20px;
+    flex: 1 1 calc(25% - 20px);
+    min-width: 300px;
+}
+.exam-questions {
+    background-color: #ff9800;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #fff;
+    margin-bottom: 20px;
+    margin-bottom: 20px;
+    flex: 1 1 calc(25% - 20px);
+    min-width: 300px;
+}
+.students-progress ul li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+    .students-progress img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.percentage {
+    background-color: #fff;
+    color: #000;
+    padding: 2px 5px;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.create-exam img,
+.exam-questions img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+}
+
+.grading-progress table {
+    min-width:100%;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.grading-progress td {
+    padding: 10px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+
+
+
+.progress-circle {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+}
+
+    .progress-circle svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    .progress-circle span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+.legend {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+    .legend span {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+    }
+
+        .legend span:first-child {
+            background-color: #673ab7;
+        }
+
+        .legend span:last-child {
+            background-color: #ff9800;
+        }
+
+.sidebar ul li {
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+    .sidebar ul li img {
+        width: 30px;
+        height: 30px;
+    }
+/* Hamburger Button */
+.hamburger {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background-color: #7b61ff;
+    color: #fff;
+    border: none;
+    font-size: 24px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    z-index: 1100;
+    cursor: pointer;
+}
+
+/* Sidebar Backdrop */
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: none;
+    z-index: 998;
+}
+
+    .backdrop.show {
+        display: block;
+    }
+
+/* Sidebar toggle animation */
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+
+/* RESPONSIVE: TABLETS */
+@media (max-width: 1024px) {
+    .admin-dashboard {
+        margin-left: 0;
+        padding: 20px 10px;
+    }
+
+    .header {
+        left: 0;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .content-container {
+        gap: 15px;
+    }
+
+    .welcome-section,
+    .students-progress,
+    .create-exam,
+    .exam-questions {
+        flex: 1 1 calc(50% - 15px); /* 2 cards per row */
+    }
+}
+
+/* RESPONSIVE: PHONES */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+        width: 250px;
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        background-color: #7b61ff;
+        z-index: 999;
+    }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+    .header {
+        left: 0;
+    }
+
+    .admin-dashboard {
+        margin-left: 0;
+    }
+}
