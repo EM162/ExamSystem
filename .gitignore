@@ -44,4 +44,5 @@ TestResults/
 *.testsettings
 *.vsmdi
 .trx
-Properties/launchSettings.json
+/ITI.ExamSystem/Properties/launchSettings.json
+
