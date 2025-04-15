@@ -1,3 +1,6 @@
+﻿using ITI.ExamSystem.Models;
+using Microsoft.EntityFrameworkCore;
+
 namespace ITI.ExamSystem
 {
     public class Program
@@ -8,6 +11,15 @@ namespace ITI.ExamSystem
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // ✅ Read connection string from environment variable
+            var connectionString = Environment.GetEnvironmentVariable("EXAM_DB_CONNECTION");
+
+            builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
+                options.UseSqlServer(connectionString));
+
+            //        builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
+            //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 

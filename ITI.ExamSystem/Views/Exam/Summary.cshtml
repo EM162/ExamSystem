@@ -1,0 +1,38 @@
+﻿@model Exam
+
+@{
+    ViewData["Title"] = "Summary";
+    var questions = Model.Questions.ToList();
+}
+
+<h2>Exam Summary</h2>
+
+<div>
+    <p><strong>Exam ID:</strong> @Model.ExamID</p>
+    <p><strong>Course:</strong> @Model.Course?.Name</p>
+    <p><strong>Date:</strong> @Model.ExamDate?.ToShortDateString()</p>
+</div>
+
+<hr />
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Question</th>
+            <th>Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < questions.Count; i++)
+        {
+            <tr>
+                <td>@(i + 1)</td>
+                <td>@questions[i].QuestionText</td>
+                <td>@questions[i].QuestionType</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

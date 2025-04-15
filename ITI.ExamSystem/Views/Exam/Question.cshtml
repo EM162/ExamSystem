@@ -1,0 +1,149 @@
+﻿@model QuestionViewModel
+@{
+    ViewData["Title"] = "Exam Question";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<style>
+    .quiz-card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .quiz-controls {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .quiz-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .progress-bar {
+        height: 6px;
+        background-color: #6f42c1;
+    }
+
+    .form-check-input:checked {
+        background-color: #6f42c1;
+        border-color: #6f42c1;
+    }
+
+    .form-check-label {
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .form-check {
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="container mt-5">
+
+    <!-- Header -->
+    <div class="quiz-header">
+        <div>
+            <h5><strong>@Model.ExamTitle</strong></h5>
+            <div class="text-muted">Session 1</div>
+        </div>
+        <div>
+            <span class="badge bg-primary">@Model.Progress%</span>
+        </div>
+        <div>
+            <strong>Time Left: <span id="timer">Loading...</span></strong>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress mb-4">
+        <div class="progress-bar" role="progressbar" style="width: @Model.Progress%" aria-valuenow="@Model.Progress" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+
+    <!-- Quiz Card -->
+    <div class="quiz-card">
+        <form method="post" asp-action="SubmitAnswer" asp-controller="Exam" id="examForm">
+            <input type="hidden" name="ExamID" value="@Model.ExamID" />
+            <input type="hidden" name="QuestionID" value="@Model.QuestionID" />
+            <input type="hidden" name="QuestionIndex" value="@Model.QuestionIndex" />
+
+            <h5>Question @Model.QuestionNumber</h5>
+            <p>@Model.QuestionText</p>
+
+            @foreach (var choice in Model.Choices)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="radio"
+                           name="SelectedChoiceID"
+                           id="choice_@choice.ChoiceID"
+                           value="@choice.ChoiceID"
+                           required />
+                    <label class="form-check-label" for="choice_@choice.ChoiceID">
+                        @choice.ChoiceText
+                    </label>
+                </div>
+            }
+
+            <div class="quiz-controls">
+                <a asp-action="Question" asp-route-examId="@Model.ExamID" asp-route-index="@(Model.QuestionIndex - 1)"
+                   class="btn btn-outline-secondary @(Model.QuestionIndex == 0 ? "disabled" : "")">Previous</a>
+
+                @if (Model.IsLastQuestion)
+                {
+                    <button type="submit" class="btn btn-success">Finish</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-primary">Next</button>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Timer & Validation -->
+<script>
+    const EXAM_KEY = "exam_timer_@Model.ExamID";
+    const examDurationSeconds = @Model.TimeRemaining * 60;
+    let timeLeft;
+
+    if (sessionStorage.getItem(EXAM_KEY)) {
+        timeLeft = parseInt(sessionStorage.getItem(EXAM_KEY));
+    } else {
+        timeLeft = examDurationSeconds;
+        sessionStorage.setItem(EXAM_KEY, timeLeft);
+    }
+
+    function updateTimer() {
+        if (timeLeft <= 0) {
+            alert("⏰ Time is up! Submitting your exam.");
+            sessionStorage.removeItem(EXAM_KEY);
+            window.location.href = "/Exam/Summary?examId=@Model.ExamID";
+            return;
+        }
+
+        const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+        const seconds = (timeLeft % 60).toString().padStart(2, '0');
+        document.getElementById("timer").innerText = `${minutes}:${seconds}`;
+        timeLeft--;
+        sessionStorage.setItem(EXAM_KEY, timeLeft);
+    }
+
+    setInterval(updateTimer, 1000);
+
+    // Prevent submit without selecting answer
+    document.getElementById("examForm").addEventListener("submit", function (e) {
+        const selected = document.querySelector('input[name="SelectedChoiceID"]:checked');
+        if (!selected) {
+            alert("⚠️ Please select an answer before continuing.");
+            e.preventDefault();
+        }
+    });
+</script>
