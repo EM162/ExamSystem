@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewData["Title"] = "AdminLogin";
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Exam Portal — Login</title>
+
+    <!-- FontAwesome for social icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p..." crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+    <!-- Your custom CSS -->
+    <link rel="stylesheet" href="@(Url.Content("~/css/AdminLogin.css"))?v=1" />
+
+
+
+
+</head>
+<body>
+  <!-- ─── HEADER ───────────────────────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-highlight">Exam</span> Portal
+    </div>
+  </header>
+
+  <!-- ─── LOGIN CONTENT ────────────────────────────────────────────────── -->
+  <div class="login-container">
+    <!-- Left panel: form -->
+    <div class="login-panel">
+      <!-- removed the h1 from here -->
+      <p class="subtitle">Login to your account</p>
+
+      <div class="social-login">
+        <span>Login with</span>
+        <div class="icons">
+          <i class="fab fa-facebook-f"></i>
+          <i class="fab fa-google"></i>
+          <i class="fab fa-linkedin-in"></i>
+        </div>
+      </div>
+
+      <form asp-action="AdminLogin" method="post" class="login-form">
+        <input type="email" name="Email" placeholder="Your Email" required />
+       <div class="password-wrapper">
+          <input type="password" id="password" placeholder="Password">
+            <span class="toggle-password">
+              <i class="fas fa-eye"></i>
+           </span>
+         </div>
+
+        <a href="#" class="forgot">Forgot password?</a>
+        <button type="submit" class="btn-login">Login</button>
+      </form>
+    </div>
+
+    <!-- Right panel: illustration -->
+    <div class="illustration-panel">
+      <img src="~/images/exam-illustration.png" alt="Exam Illustration" />
+    </div>
+  </div>
+
+
+</body>
+</html>
+

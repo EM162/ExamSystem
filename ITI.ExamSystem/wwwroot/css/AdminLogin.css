@@ -1,0 +1,155 @@
+﻿/* reset & base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f4fc;
+}
+
+.login-container {
+    display: flex;
+    height: calc(100vh - 80px); /* already correct */
+    align-items: center;
+    width: 100%; /* 🔥 THIS is what you're missing */
+}
+/* ─── SITE HEADER ───────────────────────────────────────────────────── */
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 60px 20px 40px;
+    background: #f0f4fc;
+}
+
+    .site-header .brand {
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+.brand-highlight {
+    color: #7b61ff;
+}
+
+
+/* ─── Left Panel ───────────────────────────────────────── */
+.login-panel {
+    width: 50%;
+    padding: 30px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    
+}
+
+    .login-panel h1 {
+        font-size: 32px;
+        margin-bottom: 8px;
+    }
+
+
+.subtitle {
+    font-size: 25px;
+    margin-bottom: 30px;
+    color: #7b61ff;
+}
+
+.social-login {
+    margin-bottom: 25px;
+}
+
+    .social-login span {
+        font-size: 14px;
+        color: #888;
+    }
+
+    .social-login .icons {
+        margin-top: 8px;
+    }
+
+        .social-login .icons i {
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            color: #555;
+        }
+
+/* form */
+.login-form input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.password-wrapper {
+    position: relative;
+}
+    .password-wrapper input {
+        width: 100%;
+        padding-right: 40px; /* space for the eye icon */
+    }
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 40%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    color: #888;
+}
+
+.forgot {
+    display: block;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #888;
+    text-decoration: none;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 30px;
+    background: #7b61ff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+i.far fa-eye toggle-password {
+    padding-bottom: 15px;
+}
+
+.btn-login:hover {
+    border: 2px solid #aaa;
+    background: transparent;
+    color: #555;
+}
+/* ─── Right Panel ──────────────────────────────────────── */
+.illustration-panel {
+    width: 50%;
+    background: #eef2fd;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .illustration-panel img {
+        max-width: 100%;
+        height: auto;
+    }
+
+
