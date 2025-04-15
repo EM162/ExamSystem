@@ -15,6 +15,14 @@ namespace ITI.ExamSystem
             // ✅ Read connection string from environment variable
             var connectionString = Environment.GetEnvironmentVariable("EXAM_DB_CONNECTION");
 
+            Console.WriteLine("CONNECTION STRING:");
+            Console.WriteLine(connectionString ?? "🚫 CONNECTION STRING IS NULL");
+
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException("❌ Environment variable EXAM_DB_CONNECTION is not set.");
+            }
+
             builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
                 options.UseSqlServer(connectionString));
 
