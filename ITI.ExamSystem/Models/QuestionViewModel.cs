@@ -21,12 +21,18 @@
 
         public int TimeRemainingSeconds { get; set; }
 
+        public decimal? QuestionDegree { get; set; }
+
+        public List<(int Index, string Text)> AllQuestions { get; set; }
+
     }
 
     public class ChoiceViewModel
     {
         public int ChoiceID { get; set; }
         public string ChoiceText { get; set; }
+
+        public int? ChoiceOrder { get; set; }
     }
 
 }
