@@ -250,41 +250,51 @@ namespace ITI.ExamSystem.Controllers
         public IActionResult Reactivate(int id)
         {
             var instructor = _db.Users
-                .Include(u => u.Roles)
+                .Include(u => u.Roles)  // if needed
                 .FirstOrDefault(u => u.UserID == id);
+
             if (instructor == null) return NotFound();
 
             instructor.IsDeleted = false;
 
-            var instructorRole = _db.Roles.FirstOrDefault(r => r.RoleName == "Instructor");
+            // Re-assign "Instructor" role if needed
+            var instructorRole = _db.Roles
+                .AsNoTracking()  // avoids potential reader conflicts
+                .FirstOrDefault(r => r.RoleName == "Instructor");
+
             if (instructorRole != null && !instructor.Roles.Any(r => r.RoleID == instructorRole.RoleID))
             {
                 instructor.Roles.Add(instructorRole);
             }
 
-            foreach (var intakeId in _db.Intakes.Select(i => i.IntakeID))
+            // Re-assign intake/track if needed — make sure they are materialized
+            var latestAssignments = _db.IntakeBranchTrackUsers
+                .Where(x => x.UserID == id && x.BranchID == AdminBranchID)
+                .ToList();  // ✅ forces query execution
+
+            if (!latestAssignments.Any())
             {
-                foreach (var trackId in _db.Tracks.Select(t => t.TrackID))
+                // Sample reassignment (e.g., assign to default intake/track)
+                var defaultIntake = _db.Intakes.FirstOrDefault();
+                var defaultTrack = _db.Tracks.FirstOrDefault();
+
+                if (defaultIntake != null && defaultTrack != null)
                 {
-                    bool alreadyAssigned = _db.IntakeBranchTrackUsers.Any(x => x.UserID == id && x.IntakeID == intakeId && x.TrackID == trackId && x.BranchID == AdminBranchID);
-                    if (!alreadyAssigned)
+                    _db.IntakeBranchTrackUsers.Add(new IntakeBranchTrackUser
                     {
-                        _db.IntakeBranchTrackUsers.Add(new IntakeBranchTrackUser
-                        {
-                            UserID = id,
-                            BranchID = AdminBranchID,
-                            IntakeID = intakeId,
-                            TrackID = trackId
-                        });
-                    }
+                        UserID = id,
+                        IntakeID = defaultIntake.IntakeID,
+                        TrackID = defaultTrack.TrackID,
+                        BranchID = AdminBranchID
+                    });
                 }
             }
 
-            _db.Users.Update(instructor);
             _db.SaveChanges();
 
             return RedirectToAction("Index");
         }
+
 
         private string HashPassword(string password)
         {
