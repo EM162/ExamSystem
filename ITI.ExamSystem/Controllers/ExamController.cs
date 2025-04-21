@@ -16,7 +16,7 @@ namespace ITI.ExamSystem.Controllers
 
         public IActionResult Start(int examId)
         {
-            int currentUserId = 1; // Replace with actual login logic
+            int currentUserId = 1;
 
             var userExam = db.UserExams
                 .FirstOrDefault(ue => ue.ExamID == examId && ue.UserID == currentUserId && ue.Grade != null);
