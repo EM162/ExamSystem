@@ -215,7 +215,11 @@ public partial class OnlineExaminationDBContext : DbContext
         {
             modelBuilder.Entity<User>()
         .HasIndex(u => u.Email)
+<<<<<<< HEAD
     .IsUnique();
+=======
+        .IsUnique();
+>>>>>>> b55935cab961458162d19edb69aa80db6040757e
             entity.HasKey(e => e.UserID).HasName("PK__Users__1788CCAC9B6E0D48");
 
             entity.Property(e => e.RegistrationDate).HasDefaultValueSql("(getdate())");
