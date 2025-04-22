@@ -19,11 +19,16 @@ public partial class User
     public string FullName { get; set; }
 
     [Required]
+    
     [StringLength(100)]
+    [EmailAddress]
+    [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+        ErrorMessage = "Invalid email address format.")]
     public string Email { get; set; }
 
     [Required]
     [StringLength(255)]
+
     public string PasswordHash { get; set; }
 
     [Column(TypeName = "datetime")]
