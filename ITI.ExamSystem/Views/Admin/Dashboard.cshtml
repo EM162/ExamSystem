@@ -1,6 +1,7 @@
 ﻿
 @{
     ViewData["Title"] = "Dashboard";
+	Layout = "_Layout"; // Use the custom admin layout
 }
 
 <!DOCTYPE html>
@@ -24,8 +25,8 @@
         ViewData["Title"] = "Admin Dashboard";
     }
 
-<!-- Include the Admin Sidebar Partial View -->
-    @Html.Partial("_AdminSidebar")
+@* <!-- Include the Admin Sidebar Partial View --> *@
+@*     @Html.Partial("_AdminSidebar") *@
 
 <!-- Main Content -->
 <div class="admin-dashboard">

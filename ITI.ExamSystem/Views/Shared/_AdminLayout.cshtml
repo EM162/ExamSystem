@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewData["Title"] = "_AdminLayout";
+    Layout = null; // Disable default layout
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Admin Dashboard</title>
+    <link rel="stylesheet" href="~/css/AdminDashboard.css" />
+    <script src="https://kit.fontawesome.com/your-fontawesome-key.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    @* <!-- Include the Sidebar --> *@
+    @* @Html.Partial("_AdminSidebar") *@
+
+    <!-- Main Content Area -->
+    <div class="admin-dashboard">
+        <div class="content-container">
+            @RenderBody() <!-- Placeholder for dynamic content -->
+        </div>
+    </div>
+</body>
+</html>
+

@@ -205,8 +205,7 @@ public partial class OnlineExaminationDBContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Topics__CourseID__373B3228");
         });
-
-        modelBuilder.Entity<Track>(entity =>
+    modelBuilder.Entity<Track>(entity =>
         {
             entity.HasKey(e => e.TrackID).HasName("PK__Track__7A74F8C031737D9F");
         });
