@@ -21,7 +21,7 @@ public partial class IntakeBranchTrackUser
     public int TrackID { get; set; }
 
     [Key]
-    public int UserID { get; set; }
+    public int? UserID { get; set; }
 
     [ForeignKey("BranchID")]
     [InverseProperty("IntakeBranchTrackUsers")]
