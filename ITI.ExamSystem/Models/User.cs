@@ -33,8 +33,11 @@ public partial class User
     [Column(TypeName = "datetime")]
     public DateTime? RegistrationDate { get; set; }
 
+
+    public string? ProfileImagePath { get; set; }
+
     [StringLength(255)]
-    public string ProfileImagePath { get; set; }
+   
 
     public bool IsDeleted { get; set; } = false;
 
