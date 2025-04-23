@@ -21,7 +21,8 @@ public partial class Course
 
     [StringLength(255)]
     public string CourseImagePath { get; set; }
-
+     
+  
     [InverseProperty("Course")]
     public virtual ICollection<Exam> Exams { get; set; } = new List<Exam>();
 
@@ -38,4 +39,5 @@ public partial class Course
     [ForeignKey("CourseID")]
     [InverseProperty("Courses")]
     public virtual ICollection<User> Users { get; set; } = new List<User>();
+    
 }
