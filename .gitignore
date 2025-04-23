@@ -46,3 +46,4 @@ TestResults/
 .trx
 /ITI.ExamSystem/Properties/launchSettings.json
 
+/ITI.ExamSystem/Views/Shared/_AdminSidebar.cshtml

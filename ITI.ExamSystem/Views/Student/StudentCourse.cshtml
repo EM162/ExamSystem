@@ -1,0 +1,49 @@
+﻿@model List< ITI.ExamSystem.DTOs.StudentDTO.StudentCoursesDTO> ;
+@section Styles{
+<link rel="stylesheet" href="~/css/Student-course.css" />
+}
+<div class="container-fluid dashboard">
+
+
+
+    <h5> Courses</h5>
+    <div>
+        @if (Model != null && Model.Any())
+        {
+            <p class="fw-bold">Number of Courses: @Model.Count()</p>
+        }
+        else
+        {
+            <p>No courses found.</p>
+        }
+    </div>
+
+    <div class="row g-3 mb-4">
+        @foreach (var item in Model)
+        {
+        
+            <div class="col-md-3 col-sm-6">
+                <div class="card card-custom p-3 text-center">
+                    <div class="icon mb-2">
+                        
+                        <img src="@item.CourseImagePath" alt="Course Image" class="img-fluid" width="150" height="100" />
+                    </div>
+                    <h6>@item.CourseName</h6>
+                   
+                    <!-- Take Test Button -->
+                    <h6  style="color:gray;font-size:12px;">@item.Duration Hours  </h6>
+                    <button class="btn take-btn">
+                        <a asp-controller="Course" asp-action="MyTopics" asp-route-CourseID="@item.CourseID" class="btn take-btn" >
+                            View Topics
+                        </a>
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+        
+
+
+    
+   

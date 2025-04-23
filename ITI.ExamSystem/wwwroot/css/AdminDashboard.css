@@ -17,6 +17,8 @@ body {
 }
 
 .content-container {
+    position: relative;
+    border-radius: 8px;
     max-width: 1200px;
     width: 100%;
     display: flex;
@@ -34,7 +36,7 @@ body {
     position: fixed;
     top: 0;
     right: 0;
-    left: 250px; /* Match the sidebar width */
+    left: 230px; /* Match the sidebar width */
     z-index: 1000;
     transition: left 0.3s ease;
 }
@@ -53,13 +55,12 @@ body {
 
     .search-bar input {
         flex: 1;
-        padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
     }
 
 .search-bar button {
-    padding: 10px;
+    padding: 5px;
     background-color: #7b61ff;
     color: #fff;
     border: none;
@@ -307,42 +308,97 @@ body {
         width: 30px;
         height: 30px;
     }
-/* Hamburger Button */
-.hamburger {
-    display: none;
-    position: fixed;
-    top: 15px;
-    left: 15px;
+/* General Table Styles */
+/* More Specific Table Styles */
+.admin-dashboard .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+    .admin-dashboard .table th,
+    .admin-dashboard .table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .admin-dashboard .table th {
+        background-color: #7b61ff;
+        color: white;
+    }
+
+    .admin-dashboard .table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .admin-dashboard .table tr:hover {
+        background-color: #f1f1f1;
+    }
+.createStudent {
+    top: 20px;
+    right: 20px;
     background-color: #7b61ff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     color: #fff;
-    border: none;
-    font-size: 24px;
-    padding: 10px 15px;
-    border-radius: 5px;
-    z-index: 1100;
-    cursor: pointer;
+    margin-bottom: 20px;
+    flex: 1 1 calc(25% - 20px);
+    text-decoration: none;
+}
+/* Pagination Container */
+.pagination-container {
+    display: flex;
+    justify-content: center; /* Center-align the pagination */
+    margin-top: 20px; /* Add spacing above the pagination */
 }
 
-/* Sidebar Backdrop */
-.backdrop {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    display: none;
-    z-index: 998;
-}
+    .pagination-container ul {
+        list-style: none;
+        display: flex;
+        gap: 5px; /* Space between pagination items */
+        padding: 0;
+        margin: 0;
+    }
 
-    .backdrop.show {
+    .pagination-container li.page-item {
+        display: inline-block;
+    }
+
+    .pagination-container a.page-link {
         display: block;
+        padding: 8px 12px; /* Adjust padding for better appearance */
+        background-color: #fff; /* Default background color */
+        color: #7b61ff; /* Match the purple color from your design */
+        text-decoration: none;
+        border: 1px solid #ddd; /* Add a subtle border */
+        border-radius: 5px; /* Rounded corners */
+        transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover effect */
     }
 
-/* Sidebar toggle animation */
+        .pagination-container a.page-link:hover {
+            background-color: #7b61ff; /* Purple background on hover */
+            color: #fff; /* White text on hover */
+            border-color: #7b61ff; /* Match the border color */
+        }
 
-    .sidebar.active {
-        transform: translateX(0);
+    .pagination-container .active .page-link {
+        background-color: #7b61ff; /* Active page background color */
+        color: #fff; /* Active page text color */
+        border-color: #7b61ff; /* Match the border color */
+        font-weight: bold; /* Highlight the active page */
     }
 
-
+    .pagination-container .disabled .page-link {
+        background-color: #f4f4f4; /* Disabled page background color */
+        color: #ccc; /* Disabled page text color */
+        cursor: not-allowed; /* Indicate that the link is disabled */
+        pointer-events: none; /* Disable click events */
+    }
+    .pagination-container a.page-link i {
+        font-size: 14px;
+    }
 /* RESPONSIVE: TABLETS */
 @media (max-width: 1024px) {
     .admin-dashboard {
@@ -399,5 +455,15 @@ body {
 
     .admin-dashboard {
         margin-left: 0;
+    }
+}
+@media (max-width: 768px) {
+    .pagination-container ul {
+        flex-wrap: wrap; /* Allow pagination items to wrap on small screens */
+    }
+
+    .pagination-container a.page-link {
+        padding: 6px 10px; /* Reduce padding for smaller screens */
+        font-size: 14px; /* Adjust font size */
     }
 }

@@ -45,9 +45,10 @@ public partial class OnlineExaminationDBContext : DbContext
 
     public virtual DbSet<UsersExamsQuestion> UsersExamsQuestions { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=OnlineExaminationDB;Integrated Security=True; TrustServerCertificate=True;");
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-11179IF;Initial Catalog=OnlineExaminationDB;Integrated Security=True; TrustServerCertificate=True;");
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -205,14 +206,16 @@ public partial class OnlineExaminationDBContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Topics__CourseID__373B3228");
         });
-
-        modelBuilder.Entity<Track>(entity =>
+    modelBuilder.Entity<Track>(entity =>
         {
             entity.HasKey(e => e.TrackID).HasName("PK__Track__7A74F8C031737D9F");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
+            modelBuilder.Entity<User>()
+        .HasIndex(u => u.Email)
+        .IsUnique();
             entity.HasKey(e => e.UserID).HasName("PK__Users__1788CCAC9B6E0D48");
 
             entity.Property(e => e.RegistrationDate).HasDefaultValueSql("(getdate())");

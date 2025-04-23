@@ -4,109 +4,111 @@
 }
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-<style>
-    .quiz-card {
-        background: white;
-        border-radius: 12px;
-        padding: 30px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-
-    .quiz-controls {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 30px;
-    }
-
-    .quiz-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-    }
-
-    .progress-bar {
-        height: 6px;
-        background-color: #6f42c1;
-    }
-
-    .form-check-input:checked {
-        background-color: #6f42c1;
-        border-color: #6f42c1;
-    }
-
-    .form-check-label {
-        cursor: pointer;
-        font-weight: 500;
-    }
-
-    .form-check {
-        margin-bottom: 1rem;
-    }
-</style>
+<link rel="stylesheet" href="@(Url.Content("~/css/QuestionView.css"))?v=1" />
 
 <div class="container mt-5">
 
     <!-- Header -->
-    <div class="quiz-header">
-        <div>
-            <h5><strong>@Model.ExamTitle</strong></h5>
-            <div class="text-muted">Session 1</div>
+    <div class="quiz-header justify-content-between align-items-center">
+        <div class="w-100 text-center">
+            <h4><strong>@Model.ExamTitle</strong> Exam</h4>
         </div>
         <div>
-            <span class="badge bg-primary">@Model.Progress%</span>
-        </div>
-        <div>
-            <strong>Time Left: <span id="timer">Loading...</span></strong>
+            <h2>⏱️ <h6 id="timer" class="d-inline-block"></h6></h2>
         </div>
     </div>
 
-    <!-- Progress Bar -->
-    <div class="progress mb-4">
-        <div class="progress-bar" role="progressbar" style="width: @Model.Progress%" aria-valuenow="@Model.Progress" aria-valuemin="0" aria-valuemax="100"></div>
-    </div>
+    <div class="row">
 
-    <!-- Quiz Card -->
-    <div class="quiz-card">
-        <form method="post" asp-action="SubmitAnswer" asp-controller="Exam" id="examForm">
-            <input type="hidden" name="ExamID" value="@Model.ExamID" />
-            <input type="hidden" name="QuestionID" value="@Model.QuestionID" />
-            <input type="hidden" name="QuestionIndex" value="@Model.QuestionIndex" />
-
-            <h5>Question @Model.QuestionNumber</h5>
-            <p>@Model.QuestionText</p>
-
-            @foreach (var choice in Model.Choices)
-            {
-                <div class="form-check">
-                    <input class="form-check-input" type="radio"
-                           name="SelectedChoiceID"
-                           id="choice_@choice.ChoiceID"
-                           value="@choice.ChoiceID"
-                           required />
-                    <label class="form-check-label" for="choice_@choice.ChoiceID">
-                        @choice.ChoiceText
-                    </label>
+        <div class="col-md-2 px-1">
+            <div class="p-3 rounded shadow-sm side">
+                <h5 class="mb-3 text-center border-bottom pb-2">Questions</h5>
+                <div class="list-group list-group-item-light">
+                    @foreach (var q in Model.AllQuestions)
+                    {
+                        <a href="@Url.Action("Question", new { examId = Model.ExamID, index = q.Index })"
+                           class="list-group-item list-group-item-action text-center @(q.Index == Model.QuestionIndex ? "active fw-bold" : "")">
+                            Question @(q.Index + 1)
+                        </a>
+                    }
                 </div>
-            }
-
-            <div class="quiz-controls">
-                <a asp-action="Question" asp-route-examId="@Model.ExamID" asp-route-index="@(Model.QuestionIndex - 1)"
-                   class="btn btn-outline-secondary @(Model.QuestionIndex == 0 ? "disabled" : "")">Previous</a>
-
-                @if (Model.IsLastQuestion)
-                {
-                    <button type="submit" class="btn btn-success">Finish</button>
-                }
-                else
-                {
-                    <button type="submit" class="btn btn-primary">Next</button>
-                }
             </div>
-        </form>
+        </div>
+
+
+        <!-- Main Quiz Content -->
+        <div class="col-md-10">
+           
+
+            <!-- Progress Bar -->
+            <div class="progress mb-4">
+                <div class="progress-bar" role="progressbar" style="width: @Model.Progress%" aria-valuenow="@Model.Progress" aria-valuemin="0" aria-valuemax="100"></div>
+                <span class="badge bg-secondary">@Model.Progress%</span>
+            </div>
+
+            <!-- Quiz Card -->
+            <div class="quiz-card">
+                <form method="post" asp-action="SubmitAnswer" asp-controller="Exam" id="examForm">
+                    <input type="hidden" name="ExamID" value="@Model.ExamID" />
+                    <input type="hidden" name="QuestionID" value="@Model.QuestionID" />
+                    <input type="hidden" name="QuestionIndex" value="@Model.QuestionIndex" />
+                    <input type="hidden" asp-for="IsLastQuestion" />
+
+                    <p>
+                        Question @Model.QuestionNumber
+                        <span class="text-muted mb-5">(Degree: @Model.QuestionDegree)</span>
+                    </p><br />
+
+                    <h4>@Model.QuestionText</h4><br /><br />
+
+                    @foreach (var choice in Model.Choices)
+                    {
+                        <label class="custom-choice" for="choice_@choice.ChoiceID">
+                            <input class="form-check-input" type="radio"
+                                   name="SelectedChoiceID"
+                                   id="choice_@choice.ChoiceID"
+                                   value="@choice.ChoiceID"
+                            @(Model.SelectedChoiceID == choice.ChoiceID ? "checked" : "") />
+                            <span class="checkmark"></span>
+                            <span class="choice-text">@choice.ChoiceText</span>
+                        </label>
+                    }
+
+                    <br />
+                    <div class="quiz-controls">
+                        <a asp-action="Question" asp-route-examId="@Model.ExamID" asp-route-index="@(Model.QuestionIndex - 1)"
+                           class="btn btn-outline-secondary @(Model.QuestionIndex == 0 ? "disabled" : "")"> Previous</a>
+
+                        @if (Model.IsLastQuestion)
+                        {
+                            <button type="submit" class="btn btn-success">Finish</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-dark next">Next</button>
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="timeUpModal" tabindex="-1" aria-labelledby="timeUpLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center">
+            <div class="modal-header">
+                <h5 class="modal-title w-100" id="timeUpLabel">Time's Up</h5>
+            </div>
+            <div class="modal-body">
+                Your exam time has expired. You will be redirected to the summary page.
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <!-- Timer & Validation -->
 <script>
@@ -123,22 +125,41 @@
 
     function updateTimer() {
         if (timeLeft <= 0) {
-            alert("⏰ Time is up! Submitting your exam.");
             sessionStorage.removeItem(EXAM_KEY);
-            window.location.href = "/Exam/Summary?examId=@Model.ExamID";
+            var timeUpModal = new bootstrap.Modal(document.getElementById('timeUpModal'));
+            timeUpModal.show();
+            setTimeout(function () {
+                window.location.href = "/Exam/Summary?examId=@Model.ExamID";
+            }, 3000);
             return;
+
         }
 
         const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
         const seconds = (timeLeft % 60).toString().padStart(2, '0');
-        document.getElementById("timer").innerText = `${minutes}:${seconds}`;
+        const timerElement = document.getElementById("timer");
+
+        timerElement.innerText = `${minutes}:${seconds}`;
+
+        // 🔴 Add or remove warning class based on time
+        if (timeLeft <= 20) {
+            timerElement.classList.add("warning");
+        } else {
+            timerElement.classList.remove("warning");
+        }
+
         timeLeft--;
         sessionStorage.setItem(EXAM_KEY, timeLeft);
     }
 
+    // Run once on load and every second after
+    updateTimer();
     setInterval(updateTimer, 1000);
 
-    // Prevent submit without selecting answer
+
+
+    setInterval(updateTimer, 1000);
+
     document.getElementById("examForm").addEventListener("submit", function (e) {
         const selected = document.querySelector('input[name="SelectedChoiceID"]:checked');
         if (!selected) {

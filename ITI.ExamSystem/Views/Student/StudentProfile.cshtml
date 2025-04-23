@@ -1,0 +1,100 @@
+﻿
+@model ITI.ExamSystem.DTOs.StudentDTO.StudentProfileDTO;
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/student-profile.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+}
+
+
+  <div class="container emp-profile">
+    <form method="post" enctype="multipart/form-data" action="/StudentProfile/UploadProfileImage">
+
+                <div class="row">
+                    <div class="col-md-4">
+                <div class="profile-img" >
+                  <img src="@(!string.IsNullOrEmpty(Model.ProfileImagePath) ? Model.ProfileImagePath : "/images/defult.jpg")" alt="Profile Image" />
+                 
+                    </div>
+                    <div class="file img">
+                        <input type="hidden" name="studentId" value="@Model.userID" />
+
+                    <div class="input-group" width="200">
+
+                        <input type="file" name="imageFile" id="file" class="form-control" width="200" />
+                        </div>
+
+
+                    <div class="d-grid gap-2 mt-3" width="200">
+                            <button type="submit" class="btn btn-success">📤 Upload</button>
+                        </div>
+                  
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="profile-head">
+                                    <h5>
+                                        @Model.fullname
+                                    </h5>
+                                    <h6>
+                                        @Model.trackname
+                                    </h6>
+                                    
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+                                </li>
+                               
+                            </ul>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                       
+                    </div>
+                    <div class="col-md-8">
+                        <div class="tab-content profile-tab" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" style="width:400px;">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                <label> <i class="fa-solid fa-user" style="color: #B197FC;"></i>Name</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>@Model.fullname</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                <label> <i class="fa-solid fa-laptop-code" style="color: #B197FC;"></i>Track</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>@Model.trackname</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                <label><i class="fa-solid fa-envelope" style="color: #B197FC;"></i>Email</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>@Model.Email</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                <label> <i class="fa-solid fa-user-graduate" style="color: #B197FC;"></i>Intake</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>@Model.Intack</p>
+                                            </div>
+                                        </div>
+                                         
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </form>           
+        </div>
