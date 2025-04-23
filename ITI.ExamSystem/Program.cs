@@ -1,4 +1,5 @@
 ﻿using ITI.ExamSystem.Models;
+using ITI.ExamSystem.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITI.ExamSystem
@@ -25,7 +26,7 @@ namespace ITI.ExamSystem
 
             builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
                 options.UseSqlServer(connectionString));
-
+            builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
             //        builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
             //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

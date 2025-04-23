@@ -1,0 +1,31 @@
+﻿
+
+<h1>Welcome, @Model.FullName</h1>
+<p>Email: @Model.Email</p>
+
+<!-- عرض صورة البروفايل -->
+@if (!string.IsNullOrEmpty(Model.ProfileImagePath))
+{
+    <img src="@Url.Content("~/Images/" + Model.ProfileImagePath)" alt="Profile Picture" class="img-thumbnail" />
+}
+else
+{
+    <p>No profile picture available</p>
+}
+
+<hr />
+
+<h3>Instructor Details:</h3>
+<ul>
+    <li>Branch: @Model.Branch</li>
+    <li>Track: @Model.Track</li>
+    <li>Intake Year: @Model.Intake</li>
+    <li>Number of Courses: @Model.CourseCount</li>
+    <li>Number of Students: @Model.StudentCount</li>
+    <ul>Number of Students: @foreach (var item in @Model.Courses){
+        <li>@item.Name</li>
+    }
+    </ul>
+</ul>
+</ul>
+
