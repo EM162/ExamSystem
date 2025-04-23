@@ -1,0 +1,132 @@
+﻿
+@{
+    ViewData["Title"] = "Dashboard";
+	Layout = "_Layout"; // Use the custom admin layout
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Admin Dashboard</title>
+
+    <!-- FontAwesome for social icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p..." crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+    <!-- Your custom CSS -->
+    <link rel="stylesheet" href="@(Url.Content("~/css/AdminDashboard.css"))?v=1" />
+
+
+
+
+</head>
+<body>
+    @{
+        ViewData["Title"] = "Admin Dashboard";
+    }
+
+@* <!-- Include the Admin Sidebar Partial View --> *@
+@*     @Html.Partial("_AdminSidebar") *@
+
+<!-- Main Content -->
+<div class="admin-dashboard">
+    <div class="content-container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h2>Welcome back, John!</h2>
+            <p>Your students completed <span>80%</span> of the tasks. Progress is <span>very good!</span></p>
+            <img src="~/images/overview-illustration.png" alt="Overview Illustration" />
+        </div>
+
+        <!-- Students Progress Section -->
+        <div class="students-progress">
+            <h3>Students Progress</h3>
+            <ul>
+                <li>
+                    <img src="~/images/profile1.jpg" alt="Johan" />
+                    <span>Johan</span>
+                    <div class="progress-bar" style="width: 94%; background-color: #673ab7;"></div>
+                    <span class="percentage">94%</span>
+                </li>
+                <li>
+                    <img src="~/images/profile2.jpg" alt="Anesha" />
+                    <span>Anesha</span>
+                    <div class="progress-bar" style="width: 64%; background-color: #ff9800;"></div>
+                    <span class="percentage">64%</span>
+                </li>
+                <li>
+                    <img src="~/images/profile3.jpg" alt="Josna" />
+                    <span>Josna</span>
+                    <div class="progress-bar" style="width: 54%; background-color: #2196f3;"></div>
+                    <span class="percentage">54%</span>
+                </li>
+                <li>
+                    <img src="~/images/profile4.jpg" alt="Dhanush" />
+                    <span>Dhanush</span>
+                    <div class="progress-bar" style="width: 44%; background-color: #2196f3;"></div>
+                    <span class="percentage">44%</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Create New Exam Section -->
+        <div class="create-exam">
+            <h3>Create New Exam</h3>
+            <ul>
+                <li>MCQ Exam</li>
+                <li>Subjective Exam</li>
+                <li>Mixed</li>
+            </ul>
+        </div>
+
+        <!-- Exam Questions Section -->
+        <div class="exam-questions">
+            <h3>Exam Questions</h3>
+            <ul>
+                <li>Upcoming Exam</li>
+                <li>Past Exam</li>
+                <li>Grading Progress</li>
+            </ul>
+        </div>
+   
+<!-- Grading Progress Section -->
+    <div class="grading-progress">
+        <h3>Grading Progress</h3>
+        <table>
+            <tr>
+                <td><span class="badge" style="background-color: #673ab7;">A1</span></td>
+                <td>Biology Course</td>
+                <td>MCQ Exam</td>
+                <td>Ai Corrected</td>
+                <td>78 members</td>
+                <td>47 Submitted</td>
+            </tr>
+            <tr>
+                <td><span class="badge" style="background-color: #4caf50;">A2</span></td>
+                <td>Geometry Course</td>
+                <td>Subjective Exam</td>
+                <td>mrs.Saranya</td>
+                <td>24 members</td>
+                <td>24 Submitted</td>
+            </tr>
+        </table>
+    </div>
+     </div>
+     </div>
+     <script>
+    const sidebar = document.getElementById("sidebar");
+    const backdrop = document.getElementById("sidebarBackdrop");
+    const toggleBtn = document.getElementById("toggleSidebar");
+
+    toggleBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("active");
+        backdrop.classList.toggle("show");
+    });
+
+    backdrop.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+        backdrop.classList.remove("show");
+    });
+</script>
+
+</body>

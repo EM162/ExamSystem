@@ -1,0 +1,36 @@
+﻿
+@model ExamSummaryViewModel
+
+<!-- Your custom CSS -->
+<link rel="stylesheet" href="@(Url.Content("~/css/SummaryView.css"))?v=1" />
+
+<div class="container mt-5">
+    <div class="card shadow-lg rounded-4">
+        <div class="card-header text-white text-center rounded-top-4 header">
+            <h2 class="mb-0">@Model.ExamTitle - Exam Result</h2>
+        </div>
+        <br /><br />
+        <div class="card-body text-center">
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-warning">@TempData["Message"]</div>
+            }
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="alert alert-secondary">
+                        <h5>Total Questions</h5>
+                        <h3>@Model.TotalQuestions</h3>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="alert alert-success">
+                        <h5>Your Score</h5>
+                        <h3>@Model.TotalScore</h3>
+                    </div>
+                </div>
+            </div>
+            <br /><br />
+            <a href="/Home/Index" class="btn btn-lg btn-outline-secondary px-4 bb">Back to Home</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,119 @@
+﻿body {
+    background: #f0f4fc;
+}
+/*
+.tt{
+    text-align:center;
+    margin:auto;
+    justify-content:center;
+}*/
+
+.quiz-card {
+    background: #e4deff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.quiz-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.progress-bar {
+    height: 6px;
+    background-color: #6f42c1;
+}
+
+.form-check-input:checked {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+}
+
+.form-check-label {
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.form-check {
+    margin-bottom: 1rem;
+}
+
+.custom-choice {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+    .custom-choice:hover {
+        border-color: #6f42c1;
+        background-color: #f8f5ff;
+    }
+
+    .custom-choice input[type="radio"] {
+        display: none;
+    }
+
+    .custom-choice .checkmark {
+        height: 20px;
+        width: 20px;
+        border: 2px solid #6f42c1;
+        border-radius: 50%;
+        margin-right: 15px;
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .custom-choice input[type="radio"]:checked + .checkmark::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 10px;
+        height: 10px;
+        background-color: #6f42c1;
+        border-radius: 50%;
+    }
+
+    .custom-choice .choice-text {
+        font-weight: 500;
+    }
+
+strong {
+    color: #7b61ff;
+    font-weight: bolder
+}
+
+.next {
+    background-color: #7b61ff;
+    border-color: #7b61ff;
+}
+
+.side {
+    background-color: #e4deff;
+}
+
+.sidebar .list-group-item.active {
+    background-color: #7b61ff; /* Purple (your theme color) */
+    border-color: #7b61ff;
+    color: white;
+}
+#timer.warning {
+    color: red;
+    font-weight: bold;
+}

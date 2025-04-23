@@ -12,10 +12,10 @@ namespace ITI.ExamSystem
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("conn1"))
 
-            builder.Services.AddDbContext<OnlineExaminationDBContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("conn1")));
-
-
+            );
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<IStudentRepositary, StudentRepositary>();
@@ -25,6 +25,11 @@ namespace ITI.ExamSystem
 
 
 
+
+           
+
+            //        builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
+            //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 

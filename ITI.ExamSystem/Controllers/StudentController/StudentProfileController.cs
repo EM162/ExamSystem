@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ITI.ExamSystem.Controllers.StudentController
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class StudentProfileController : Controller
     {
         private IStudentRepositary userRepositary;
@@ -27,7 +29,8 @@ namespace ITI.ExamSystem.Controllers.StudentController
         {
             return View();
         }
-
+        // localhost/api/StudentProfile/3
+        [HttpGet("{id}")]
         public IActionResult Profile(int id)
         {
 

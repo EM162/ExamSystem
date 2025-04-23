@@ -44,3 +44,6 @@ TestResults/
 *.testsettings
 *.vsmdi
 .trx
+/ITI.ExamSystem/Properties/launchSettings.json
+
+/ITI.ExamSystem/Views/Shared/_AdminSidebar.cshtml
