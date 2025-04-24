@@ -9,5 +9,7 @@ namespace ITI.ExamSystem.Repository
 
         Task<List<StudentCoursesDTO>> GetCoursesByStudentId(int studentId);
         Task<List<Topic>> GetTopicsByCourseId(int courseId);
+        Course GetCourseById(int courseId);
+
     }
 }
