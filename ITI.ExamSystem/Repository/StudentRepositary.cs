@@ -82,7 +82,7 @@ namespace ITI.ExamSystem.Repository
                 CourseID = course.CourseID,
                 CourseName = course.Name,
                 Duration = course.Duration,
-               
+               CourseImagePath = course.CourseImagePath,
                 Topics = course.Topics.Select(t => new StudentTopicsDTO
                 {
                     TopicId = t.TopicID,
@@ -95,33 +95,11 @@ namespace ITI.ExamSystem.Repository
 
             return studentCourses;
         }
-        
-        /*
-        public async Task<List<StudentCoursesDTO>> GetCoursesByStudentId(int studentId)
-        {
-            var studentCourses = await (from course in _db.Courses
-                                        join userExam in _db.UserExams
-                                        on course.CourseID equals userExam.Exam.CourseID into userExams
-                                        from userExam in userExams.DefaultIfEmpty() // Left Join to get all courses even if no exam record exists
-                                        where userExam.UserID == studentId || userExam == null // Ensure we get the course even if no exam record exists
-                                        select new StudentCoursesDTO
-                                        {
-                                            CourseID = course.CourseID,
-                                            CourseName = course.Name,
-                                            Duration = course.Duration,
-                                            Grade = userExam.Grade , // If no exam, return grade as 0
-                                            Topics = course.Topics.Select(t => new StudentTopicsDTO
-                                            {
-                                                TopicId = t.TopicID,
-                                                TopicName = t.TopicName,
-                                                Description = t.Description
-                                            }).ToList()
-                                        })
-                                         .ToListAsync();
 
-            return studentCourses;
+        public Course GetCourseById(int Id)
+        {
+            return _db.Courses.FirstOrDefault(c => c.CourseID == Id);
         }
-        */
     }
 
 }
