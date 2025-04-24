@@ -1,8 +1,7 @@
 ﻿@model ITI.ExamSystem.Models.InstructorIndexViewModel
-
 @{
     ViewData["Title"] = "Instructors";
-    var i = 1;
+    var i = (Model.CurrentPage - 1) * 10 + 1;
 }
 
 <h2 class="mb-4">Instructors</h2>
@@ -18,24 +17,34 @@
             <th>Full Name</th>
             <th>Email</th>
             <th>Branch</th>
-            <th>Track</th>
-            <th>Intake</th>
+            <th>Tracks</th>
+            <th>Intakes</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.ActiveInstructors)
+        @foreach (var inst in Model.Instructors)
         {
             <tr>
-                <td>@item.UserID</td>
-                <td>@item.User?.FullName</td>
-                <td>@item.User?.Email</td>
-                <td>@item.Branch?.BranchName</td>
-                <td>@item.Track?.TrackName</td>
-                <td>@item.Intake?.IntakeName</td>
+                <td>@i</td>
+                <td>@inst.FullName</td>
+                <td>@inst.Email</td>
+                <td>@inst.BranchName</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.UserID" class="btn btn-sm btn-warning me-2">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.UserID" class="btn btn-sm btn-danger">Delete</a>
+                    @foreach (var track in inst.Tracks.Split(","))
+                    {
+                        <div>@track.Trim()</div>
+                    }
+                </td>
+                <td>
+                    @foreach (var intake in inst.Intakes.Split(","))
+                    {
+                        <div>@intake.Trim()</div>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@inst.UserID" class="btn  btn-md">📝</a>
+                    <a asp-action="Delete" asp-route-id="@inst.UserID" class="btn btn-sm">❌</a>
                 </td>
             </tr>
             i++;
@@ -55,12 +64,10 @@
     </ul>
 </nav>
 
-
-
-<!-- Deleted Instructors Table -->
+<!-- Deleted Instructors -->
 @if (Model.DeletedInstructors.Any())
 {
-    <h4 class="mt-5">InActive Instructors</h4>
+    <h4 class="mt-5">Inactive Instructors</h4>
     <table class="table table-bordered table-striped">
         <thead class="table-secondary">
             <tr>
@@ -81,7 +88,7 @@
                         <td>@item.Email</td>
                         <td>
                             <form asp-action="Reactivate" asp-route-id="@item.UserID" method="post" style="display:inline">
-                                <button type="submit" class="btn btn-sm btn-success">Reactivate</button>
+                                <button type="submit" class="btn btn-success btn-sm">Reactivate</button>
                             </form>
                         </td>
                     </tr>

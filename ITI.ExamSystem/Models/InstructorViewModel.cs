@@ -23,7 +23,9 @@ namespace ITI.ExamSystem.Models
 
         public int BranchID { get; set; }
 
-
+        public string BranchName { get; set; }
+        public string Tracks { get; set; }
+        public string Intakes { get; set; }
 
         [Display(Name = "Profile Image")]
         [ValidateNever]

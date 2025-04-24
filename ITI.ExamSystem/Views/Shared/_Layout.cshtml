@@ -30,6 +30,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ITI.ExamSystem</title>
@@ -39,8 +40,11 @@
     <link rel="stylesheet" href="~/css/AdminDashboard.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p..." crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="~/ITI.ExamSystem.styles.css" asp-append-version="true" />
-    
-</head>
+
+    @RenderSection("Styles", required: false)
+
+    </head>
+
 <body>
     <div class="admin-dashboard">
         <!-- Sidebar -->
@@ -90,6 +94,7 @@
                         <img src="~/images/user-avatar.jpg" alt="User Avatar" />
                         <span>John</span>
                     </div>
+
                 </div>
             </div>
 
