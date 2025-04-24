@@ -1,6 +1,4 @@
-﻿@using X.PagedList.Mvc.Core;
-@using X.PagedList
-@model IPagedList<ITI.ExamSystem.Models.User>
+﻿@model ITI.ExamSystem.Models.StudentIndexViewModel
 @{
     ViewData["Title"] = "Students";
     Layout = "_Layout"; // Use the custom admin layout
@@ -10,25 +8,26 @@
     <div class="welcome-section">
         <a asp-action="CreateStudent" class="createStudent">Add New Student</a>
 
-        <table class="table">
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Full Name</th>
                     <th>Email</th>
-                    <th>Registration Date</th>
-                    <th>Profile Photo</th>
+                    <th>Branch</th>
+                    <th>Track</th>
+                    <th>Intake</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var student in Model)
+                @foreach (var student in Model.ActiveStudents)
                 {
                     <tr>
                         <td>@student.UserID</td>
                         <td>
                             @{
-                                var fullName = student.FullName;
+                                var fullName = student.User.FullName;
                                 if (!string.IsNullOrEmpty(ViewBag.searchTerm))
                                 {
                                     var searchTerm = ViewBag.searchTerm as string;
@@ -37,18 +36,10 @@
                                 @Html.Raw(fullName)
                             }
                         </td>
-                        <td>@student.Email</td>
-                        <td>@(student.RegistrationDate.HasValue ? student.RegistrationDate.Value.ToShortDateString() : "N/A")</td>
-                        <td>
-                            @if (!string.IsNullOrEmpty(student.ProfileImagePath))
-                            {
-                                <img src="@Url.Content("~/images/" + student.ProfileImagePath)" alt="Profile Photo" style="width: 50px; height: 50px;" />
-                            }
-                            else
-                            {
-                                <span>No Photo</span>
-                            }
-                        </td>
+                        <td>@student.User.Email</td>
+                        <td>@student.Branch.BranchName</td>
+                        <td>@student.Track.TrackName</td>
+                        <td>@student.Intake.IntakeName</td>
                         <td>
                             <a asp-action="EditStudent" asp-route-id="@student.UserID" class="btn btn-warning">Edit</a>
                             <a asp-action="DeleteStudent" asp-route-id="@student.UserID" class="btn btn-danger">Delete</a>
@@ -57,42 +48,47 @@
                 }
             </tbody>
         </table>
-
-        <div class="pagination-container">
-			@if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
-			{
-                @Html.PagedListPager(Model, page => Url.Action("SearchStudents", new { page, searchTerm = ViewBag.SearchTerm }),
-                         new PagedListRenderOptions
-            {
-                DisplayLinkToFirstPage = PagedListDisplayMode.Always,
-                DisplayLinkToLastPage = PagedListDisplayMode.Always,
-                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-                DisplayLinkToNextPage = PagedListDisplayMode.Always,
-                LinkToPreviousPageFormat = "<i class='fas fa-chevron-left'></i>",
-                LinkToNextPageFormat = "<i class='fas fa-chevron-right'></i>",
-                MaximumPageNumbersToDisplay = 7,
-                LiElementClasses = new[] { "page-item" },
-                PageClasses = new[] { "page-link" }
-            })
-			}
-			else
-			{
-                @Html.PagedListPager(Model, page => Url.Action("ReadStudents", new { page}),
-                         new PagedListRenderOptions
-            {
-                DisplayLinkToFirstPage = PagedListDisplayMode.Always,
-                DisplayLinkToLastPage = PagedListDisplayMode.Always,
-                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-                DisplayLinkToNextPage = PagedListDisplayMode.Always,
-                LinkToPreviousPageFormat = "<i class='fas fa-chevron-left'></i>",
-                LinkToNextPageFormat = "<i class='fas fa-chevron-right'></i>",
-                MaximumPageNumbersToDisplay = 7,
-                LiElementClasses = new[] { "page-item" },
-                PageClasses = new[] { "page-link" }
-            })
-			}
-           
-
-        </div>
+        <!-- Pagination -->
+        <nav aria-label="Student pagination">
+            <ul class="pagination justify-content-center">
+                @for (int page = 1; page <= Model.TotalPages; page++)
+                {
+                    <li class="page-item @(page == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-action="ReadStudents" asp-route-page="@(page)">@(page)</a>
+                    </li>
+                }
+            </ul>
+        </nav>
     </div>
+    <!-- Deleted Students Table -->
+    @if (Model.DeletedStudents.Any())
+    {
+        <h4 class="mt-5">InActive Students</h4>
+        <table class="table table-bordered table-striped">
+            <thead class="table-secondary">
+                <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{foreach (var student in Model.DeletedStudents)
+                    {
+                        <tr>
+                            <td>@student.UserID</td>
+                            <td>@student.FullName</td>
+                            <td>@student.Email</td>
+                            <td>
+                                <form asp-action="Reactivate" asp-route-id="@student.UserID" method="post" style="display:inline">
+                                    <button type="submit" class="btn btn-sm btn-success">Reactivate</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
 </div>
