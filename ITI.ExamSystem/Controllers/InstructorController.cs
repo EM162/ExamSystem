@@ -21,30 +21,55 @@ namespace ITI.ExamSystem.Controllers
 
         public IActionResult Index(int page = 1, int pageSize = 10)
         {
-            var all = _db.IntakeBranchTrackUsers
-                .Where(x => x.BranchID == AdminBranchID && !x.User.IsDeleted)
-                .Include(x => x.User)
-                .Include(x => x.Track)
-                .Include(x => x.Intake)
-                .Include(x => x.Branch)
+            var instructorRoleId = _db.Roles.FirstOrDefault(r => r.RoleName == "Instructor")?.RoleID;
+
+            var instructorsQuery = _db.Users
+                .Include(u => u.Roles)
+                .Include(u => u.IntakeBranchTrackUsers)
+                    .ThenInclude(x => x.Intake)
+                .Include(u => u.IntakeBranchTrackUsers)
+                    .ThenInclude(x => x.Track)
+                .Include(u => u.IntakeBranchTrackUsers)
+                    .ThenInclude(x => x.Branch)
+                .Where(u => !u.IsDeleted && u.Roles.Any(r => r.RoleID == instructorRoleId))
+                .ToList();
+
+            var instructorList = instructorsQuery
+                .Select(u => new InstructorViewModel
+                {
+                    UserID = u.UserID,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    BranchName = u.IntakeBranchTrackUsers.FirstOrDefault()?.Branch?.BranchName ?? "N/A",
+                    Tracks = string.Join(",", u.IntakeBranchTrackUsers.Select(x => x.Track?.TrackName).Distinct()),
+                    Intakes = string.Join(",", u.IntakeBranchTrackUsers.Select(x => x.Intake?.IntakeName).Distinct()),
+                    ExistingImagePath = u.ProfileImagePath
+                })
+                .ToList();
+
+            var paged = instructorList
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToList();
 
             var deleted = _db.Users
-                .Where(u => u.IsDeleted)
+                .Include(u => u.Roles)
+                .Where(u => u.IsDeleted && u.Roles.Any(r => r.RoleName == "Instructor"))
                 .ToList();
-
-            var paged = all.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             var model = new InstructorIndexViewModel
             {
-                ActiveInstructors = paged,
+                Instructors = paged,
                 DeletedInstructors = deleted,
                 CurrentPage = page,
-                TotalPages = (int)Math.Ceiling((double)all.Count / pageSize)
+                TotalPages = (int)Math.Ceiling((double)instructorList.Count / pageSize)
             };
 
             return View(model);
         }
+
+
+
 
         public IActionResult Create()
         {
