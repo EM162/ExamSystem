@@ -27,7 +27,7 @@
         @foreach (var item in Model.ActiveInstructors)
         {
             <tr>
-                <td>@i</td>
+                <td>@item.UserID</td>
                 <td>@item.User?.FullName</td>
                 <td>@item.User?.Email</td>
                 <td>@item.Branch?.BranchName</td>

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using X.PagedList;
 using X.PagedList.Extensions;
 
@@ -10,6 +11,7 @@ namespace ITI.ExamSystem.Controllers
     public class AdminController : Controller
     {
         private readonly OnlineExaminationDBContext db;
+        private const int AdminBranchID = 1;
 
         public AdminController(OnlineExaminationDBContext _db)
         {
@@ -21,13 +23,31 @@ namespace ITI.ExamSystem.Controllers
         }
 
         //Students
-        public IActionResult ReadStudents(int? page)
+        public IActionResult ReadStudents(int page=1, int pageSize=7)
         {
-            int pageSize = 7; // Number of students per page
-            int pageNumber =page ?? 1; // Current page number
-            var studentsQuery = db.Users.Where(u => u.Roles.Any(r => r.RoleName == "Student")).ToList();
-            var students = studentsQuery.ToPagedList(pageNumber, pageSize);
-            return View(students);
+            var allStudents = db.IntakeBranchTrackUsers
+                .Where(x => x.BranchID == AdminBranchID && !x.User.IsDeleted)
+                .Include(x => x.User)
+                .Include(x => x.Track)
+                .Include(x => x.Intake)
+                .Include(x => x.Branch)
+                .ToList();
+
+            var deletedStudents = db.Users
+                .Where(u => u.IsDeleted)
+                .ToList();
+
+            var paged = allStudents.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            var model = new StudentIndexViewModel
+            {
+                ActiveStudents = paged,
+                DeletedStudents = deletedStudents,
+                CurrentPage = page,
+                TotalPages = (int)Math.Ceiling((double)allStudents.Count() / pageSize)
+            };
+
+            return View(model);
         }
 
         public IActionResult CreateStudent()

@@ -21,14 +21,9 @@ public partial class User
     [Required]
     
     [StringLength(100)]
-<<<<<<< HEAD
     [EmailAddress]
     [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
         ErrorMessage = "Invalid email address format.")]
-=======
-    [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
-        ErrorMessage = "Invalid email address format.")]
->>>>>>> b55935cab961458162d19edb69aa80db6040757e
     public string Email { get; set; }
 
     [Required]

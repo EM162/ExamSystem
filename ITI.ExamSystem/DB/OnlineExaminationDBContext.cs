@@ -205,8 +205,7 @@ public partial class OnlineExaminationDBContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Topics__CourseID__373B3228");
         });
-
-        modelBuilder.Entity<Track>(entity =>
+    modelBuilder.Entity<Track>(entity =>
         {
             entity.HasKey(e => e.TrackID).HasName("PK__Track__7A74F8C031737D9F");
         });
@@ -215,11 +214,7 @@ public partial class OnlineExaminationDBContext : DbContext
         {
             modelBuilder.Entity<User>()
         .HasIndex(u => u.Email)
-<<<<<<< HEAD
     .IsUnique();
-=======
-        .IsUnique();
->>>>>>> b55935cab961458162d19edb69aa80db6040757e
             entity.HasKey(e => e.UserID).HasName("PK__Users__1788CCAC9B6E0D48");
 
             entity.Property(e => e.RegistrationDate).HasDefaultValueSql("(getdate())");
