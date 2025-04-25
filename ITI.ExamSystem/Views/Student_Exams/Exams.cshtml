@@ -7,13 +7,19 @@
 
 <h2 class="mb-4">📝 My Exams</h2>
 
-<div class="mb-3">
-    <form method="get">
-        <input type="text" name="SearchQuery" placeholder="Search by course name..." class="form-control mb-2" value="@Model.SearchQuery" />
-        <input type="date" name="FilterDate" class="form-control mb-2" value="@Model.FilterDate?.ToString("yyyy-MM-dd")" />
-        <button type="submit" class="btn btn-secondary">Search</button>
-    </form>
-</div>
+@* <div class="mb-3"> *@
+@*     <form method="get" asp-action="Exams" asp-controller="Student_Exams"> *@
+@*         <div class="row g-2"> *@
+@*             <div class="col-md-4"> *@
+@*                 <input type="text" name="SearchQuery" placeholder="Search by exam ID or course name..." class="form-control" value="@Model.SearchQuery" /> *@
+@*             </div> *@
+@*             <div class="col-md-4"> *@
+@*                 <button type="submit" class="btn btn-primary w-100">🔍 Search</button> *@
+@*             </div> *@
+@*         </div> *@
+@*     </form> *@
+@* </div> *@
+
 
 <ul class="nav nav-tabs" id="examTabs" role="tablist">
     <li class="nav-item" role="presentation">
@@ -26,47 +32,40 @@
 <div class="tab-content mt-3" id="examTabsContent">
     <!-- Upcoming Exams -->
     <div class="tab-pane fade show active" id="upcoming" role="tabpanel">
+
         @if (Model.UpcomingExams.Any())
         {
-            <table class="table table-bordered">
-                <thead class="table-dark">
+            <table class="table">
+                <thead>
                     <tr>
-                        <th>Course</th>
-                        <th>Date</th>
-                        <th>Track</th>
-                        <th>Intake</th>
-                        <th>Branch</th>
+                        <th>Exam ID</th>
+                        <th>Exam Date</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model.PreviousExams.Any())
+                    @foreach (var exam in Model.UpcomingExams)
                     {
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Exam ID</th>
-                                    <th>Grade</th>
-                                    <th>Exam Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var exam in Model.PreviousExams)
+                        <tr>
+                            <td>@exam.ExamID</td>
+                            <td>@exam.Exam?.ExamDate?.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                @if (exam.Exam?.ExamDate <= DateTime.Now && !Model.FinishedExamIds.Contains(exam.ExamID))
                                 {
-                                    <tr>
-                                        <td>@exam.ExamID</td>
-                                        <td>@exam.Grade</td>
-                                        <td>@exam.Exam?.ExamDate?.ToString("yyyy-MM-dd")</td>
-                                    </tr>
+                                    <a asp-controller="Exam" asp-action="Start" asp-route-examId="@exam.ExamID" class="btn btn-success btn-sm">Open Exam</a>
                                 }
-                            </tbody>
-                        </table>
-                    }
-                    else
-                    {
-                        <p>No previous exams.</p>
-                    }
+                                else if (Model.FinishedExamIds.Contains(exam.ExamID))
+                                {
+                                    <span class="btn btn-secondary btn-sm disabled">Completed</span>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-warning btn-sm disabled">Locked</span>
+                                }
+                            </td>
 
+                        </tr>
+                    }
                 </tbody>
             </table>
         }
@@ -74,6 +73,7 @@
         {
             <p class="text-muted">No upcoming exams.</p>
         }
+
     </div>
 
     <!-- Previous Exams -->
@@ -97,7 +97,7 @@
                             <td>@userExam.Exam?.ExamDate?.ToString("yyyy-MM-dd")</td>
                             <td>@userExam.Grade</td>
                             <td>
-                                <a asp-action="ExamDetails" asp-route-examId="@userExam.ExamID" class="btn btn-info btn-sm">Details</a>
+                                <a asp-action="ExamDetails" asp-route-examId="@userExam.ExamID" class="btn btn-secondary btn-sm">Details</a>
                             </td>
                         </tr>
                     }
