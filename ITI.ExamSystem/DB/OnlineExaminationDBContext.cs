@@ -3,10 +3,12 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ITI.ExamSystem.Models;
 
-public partial class OnlineExaminationDBContext : DbContext
+public partial class OnlineExaminationDBContext : IdentityDbContext<ApplicationUser>
 {
     public OnlineExaminationDBContext()
     {
@@ -52,6 +54,8 @@ public partial class OnlineExaminationDBContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Branch>(entity =>
         {
             entity.HasKey(e => e.BranchID).HasName("PK__Branch__A1682FA555BC9467");
