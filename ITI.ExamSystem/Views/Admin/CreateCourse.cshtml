@@ -1,0 +1,48 @@
+﻿@model ITI.ExamSystem.Models.CourseViewModel
+@{
+    ViewData["Title"] = "CreateCourse";
+	Layout = "_Layout"; // Use the custom admin layout
+}
+
+<h2>CreateCourse</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+<form asp-action="CreateCourse">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Duration"></label>
+        <input asp-for="Duration" class="form-control" />
+        <span asp-validation-for="Duration" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CourseImage"></label>
+        <input asp-for="CourseImage" type="file" class="form-control" />
+    </div>
+            <div class="mb-3">
+                <label class="form-label">Assign Tracks</label>
+                @foreach (var track in Model.AvailableTracks)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="SelectedTrackIDs" value="@track.TrackID" id="track_@track.TrackID" />
+                        <label class="form-check-label" for="track_@track.TrackID">@track.TrackName</label>
+                    </div>
+                }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="ReadCourses" class="btn btn-secondary">Cancel </a>
+            </div>
+</form>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

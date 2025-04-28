@@ -254,6 +254,54 @@ namespace ITI.ExamSystem.Controllers
             return View("ReadStudents", model);
         }
 
+        public IActionResult ReactivateStudent(int id)
+        {
+            var student = db.Users
+                .Include(u => u.Roles)  // if needed
+                .FirstOrDefault(u => u.UserID == id);
+
+            if (student == null) return NotFound();
+
+            student.IsDeleted = false;
+
+            // Re-assign "Instructor" role if needed
+            var studentRole = db.Roles
+                .AsNoTracking()  // avoids potential reader conflicts
+                .FirstOrDefault(r => r.RoleName == "Student");
+
+            if (studentRole != null && !student.Roles.Any(r => r.RoleID == studentRole.RoleID))
+            {
+                student.Roles.Add(studentRole);
+            }
+
+            // Re-assign intake/track if needed — make sure they are materialized
+            var latestAssignments = db.IntakeBranchTrackUsers
+                .Where(x => x.UserID == id && x.BranchID == AdminBranchID)
+                .ToList();  // ✅ forces query execution
+
+            if (!latestAssignments.Any())
+            {
+                // Sample reassignment (e.g., assign to default intake/track)
+                var defaultIntake = db.Intakes.FirstOrDefault();
+                var defaultTrack = db.Tracks.FirstOrDefault();
+
+                if (defaultIntake != null && defaultTrack != null)
+                {
+                    db.IntakeBranchTrackUsers.Add(new IntakeBranchTrackUser
+                    {
+                        UserID = id,
+                        IntakeID = defaultIntake.IntakeID,
+                        TrackID = defaultTrack.TrackID,
+                        BranchID = AdminBranchID
+                    });
+                }
+            }
+
+            db.SaveChanges();
+
+            return RedirectToAction("ReadInstructors");
+        }
+
         //Instructors
         public IActionResult ReadInstructors(int page = 1, int pageSize = 7)
         {
@@ -532,6 +580,326 @@ namespace ITI.ExamSystem.Controllers
             ViewBag.SearchTerm = searchTerm; // Pass the search term to the view
             return View("ReadInstructors", model);
         }
+
+
+        public IActionResult ReactivateInstructor(int id)
+        {
+            var instructor = db.Users
+                .Include(u => u.Roles)  // if needed
+                .FirstOrDefault(u => u.UserID == id);
+
+            if (instructor == null) return NotFound();
+
+            instructor.IsDeleted = false;
+
+            // Re-assign "Instructor" role if needed
+            var instructorRole = db.Roles
+                .AsNoTracking()  // avoids potential reader conflicts
+                .FirstOrDefault(r => r.RoleName == "Instructor");
+
+            if (instructorRole != null && !instructor.Roles.Any(r => r.RoleID == instructorRole.RoleID))
+            {
+                instructor.Roles.Add(instructorRole);
+            }
+
+            // Re-assign intake/track if needed — make sure they are materialized
+            var latestAssignments = db.IntakeBranchTrackUsers
+                .Where(x => x.UserID == id && x.BranchID == AdminBranchID)
+                .ToList();  // ✅ forces query execution
+
+            if (!latestAssignments.Any())
+            {
+                // Sample reassignment (e.g., assign to default intake/track)
+                var defaultIntake = db.Intakes.FirstOrDefault();
+                var defaultTrack = db.Tracks.FirstOrDefault();
+
+                if (defaultIntake != null && defaultTrack != null)
+                {
+                    db.IntakeBranchTrackUsers.Add(new IntakeBranchTrackUser
+                    {
+                        UserID = id,
+                        IntakeID = defaultIntake.IntakeID,
+                        TrackID = defaultTrack.TrackID,
+                        BranchID = AdminBranchID
+                    });
+                }
+            }
+
+            db.SaveChanges();
+
+            return RedirectToAction("ReadInstructors");
+        }
+
+        //courses
+
+            public IActionResult ReadCourses(int page = 1, int pageSize = 7)
+            {
+                var allCourses = db.Courses
+                    .Include(c => c.Tracks)
+                    .Where(c => !c.IsDeleted)
+                    .ToList();
+
+                var courseList = allCourses
+                    .Select(c => new CourseViewModel
+                    {
+                        CourseID = c.CourseID,
+                        Name = c.Name,
+                        Duration = c.Duration,
+                        ExistingImagePath = c.CourseImagePath,
+                        SelectedTrackIDs = c.Tracks.Select(t => t.TrackID).ToList(),
+                        AvailableTracks = db.Tracks
+                            .Select(t => new CourseViewModel.TrackItem
+                            {
+                                TrackID = t.TrackID,
+                                TrackName = t.TrackName
+                            }).ToList()
+                    })
+                    .ToList();
+
+                var deletedCourses = db.Courses
+                    .Where(c => c.IsDeleted)
+                    .ToList();
+
+                var paged = courseList
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                var model = new CourseIndexViewModel
+                {
+                    Courses = paged,
+                    DeletedCourses = deletedCourses,
+                    CurrentPage = page,
+                    TotalPages = (int)Math.Ceiling((double)allCourses.Count / pageSize)
+                };
+
+                return View(model);
+            }
+
+            public IActionResult CreateCourse()
+            {
+                var model = new CourseViewModel
+                {
+                    AvailableTracks = db.Tracks
+                        .Select(t => new CourseViewModel.TrackItem
+                        {
+                            TrackID = t.TrackID,
+                            TrackName = t.TrackName
+                        }).ToList()
+                };
+                return View(model);
+            }
+
+            [HttpPost]
+            public IActionResult CreateCourse(CourseViewModel model)
+            {
+                if (!ModelState.IsValid)
+                {
+                    model.AvailableTracks = db.Tracks
+                        .Select(t => new CourseViewModel.TrackItem
+                        {
+                            TrackID = t.TrackID,
+                            TrackName = t.TrackName
+                        }).ToList();
+                    return View(model);
+                }
+
+                var course = new Course
+                {
+                    Name = model.Name,
+                    Duration = model.Duration
+                };
+
+                if (model.CourseImage != null)
+                {
+                    course.CourseImagePath = SaveImage(model.CourseImage);
+                }
+
+                foreach (var trackId in model.SelectedTrackIDs)
+                {
+                    var track = db.Tracks.Find(trackId);
+                    if (track != null)
+                    {
+                        course.Tracks.Add(track);
+                    }
+                }
+
+                db.Courses.Add(course);
+                db.SaveChanges();
+
+                return RedirectToAction("ReadCourses");
+            }
+
+            public IActionResult EditCourse(int id)
+            {
+                var course = db.Courses
+                    .Include(c => c.Tracks)
+                    .FirstOrDefault(c => c.CourseID == id);
+
+                if (course == null) return NotFound();
+
+                var model = new CourseViewModel
+                {
+                    CourseID = course.CourseID,
+                    Name = course.Name,
+                    Duration = course.Duration,
+                    ExistingImagePath = course.CourseImagePath,
+                    SelectedTrackIDs = course.Tracks.Select(t => t.TrackID).ToList(),
+                    AvailableTracks = db.Tracks
+                        .Select(t => new CourseViewModel.TrackItem
+                        {
+                            TrackID = t.TrackID,
+                            TrackName = t.TrackName
+                        }).ToList()
+                };
+
+                return View(model);
+            }
+
+            [HttpPost]
+            public IActionResult EditCourse(CourseViewModel model)
+            {
+                if (!ModelState.IsValid)
+                {
+                    model.AvailableTracks = db.Tracks
+                        .Select(t => new CourseViewModel.TrackItem
+                        {
+                            TrackID = t.TrackID,
+                            TrackName = t.TrackName
+                        }).ToList();
+                    return View(model);
+                }
+
+                var course = db.Courses
+                    .Include(c => c.Tracks)
+                    .FirstOrDefault(c => c.CourseID == model.CourseID);
+
+                if (course == null) return NotFound();
+
+                course.Name = model.Name;
+                course.Duration = model.Duration;
+
+                if (model.CourseImage != null)
+                {
+                    if (!string.IsNullOrEmpty(course.CourseImagePath))
+                    {
+                        var oldPath = Path.Combine("wwwroot/images/courses", course.CourseImagePath);
+                        if (System.IO.File.Exists(oldPath)) System.IO.File.Delete(oldPath);
+                    }
+                    course.CourseImagePath = SaveImage(model.CourseImage);
+                }
+
+                course.Tracks.Clear();
+                foreach (var trackId in model.SelectedTrackIDs)
+                {
+                    var track = db.Tracks.Find(trackId);
+                    if (track != null)
+                    {
+                        course.Tracks.Add(track);
+                    }
+                }
+
+                db.SaveChanges();
+
+                return RedirectToAction("ReadCourses");
+            }
+
+            public IActionResult DeleteCourse(int id)
+            {
+                var course = db.Courses.FirstOrDefault(c => c.CourseID == id);
+
+                if (course == null) return NotFound();
+
+                course.IsDeleted = true;
+                db.SaveChanges();
+
+                return RedirectToAction("ReadCourses");
+            }
+
+            [HttpPost]
+            public IActionResult ReactivateCourse(int id)
+            {
+                var course = db.Courses
+                    .Include(c => c.Tracks)
+                    .FirstOrDefault(c => c.CourseID == id);
+
+                if (course == null) return NotFound();
+
+                course.IsDeleted = false;
+
+                if (!course.Tracks.Any())
+                {
+                    var defaultTrack = db.Tracks.FirstOrDefault();
+                    if (defaultTrack != null)
+                    {
+                        course.Tracks.Add(defaultTrack);
+                    }
+                }
+
+                db.SaveChanges();
+
+                return RedirectToAction("ReadCourses");
+            }
+
+
+        [HttpPost, ActionName("DeleteCourse")]
+        public IActionResult DeleteCourseConfirmed(int id)
+        {
+            var course = db.Courses
+                .FirstOrDefault(c => c.CourseID == id);
+
+            if (course == null) return NotFound();
+
+            course.IsDeleted = true;
+            db.SaveChanges();
+
+            return RedirectToAction("ReadCourses");
+        }
+
+        public IActionResult SearchCourses(string searchTerm, int? page)
+            {
+                int pageSize = 7; // Number of courses per page
+                int pageNumber = page ?? 1; // Current page number
+
+                var coursesQuery = db.Courses
+                    .Where(c => string.IsNullOrEmpty(searchTerm) || c.Name.ToLower().Contains(searchTerm.ToLower()))
+                    .Include(c => c.Tracks)
+                    .ToList();
+
+                var courseList = coursesQuery
+                    .Select(c => new CourseViewModel
+                    {
+                        CourseID = c.CourseID,
+                        Name = c.Name,
+                        Duration = c.Duration,
+                        ExistingImagePath = c.CourseImagePath,
+                        SelectedTrackIDs = c.Tracks.Select(t => t.TrackID).ToList(),
+                        AvailableTracks = db.Tracks
+                            .Select(t => new CourseViewModel.TrackItem
+                            {
+                                TrackID = t.TrackID,
+                                TrackName = t.TrackName
+                            }).ToList()
+                    })
+                    .ToList();
+
+                var paged = courseList
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                var model = new CourseIndexViewModel
+                {
+                    Courses = paged,
+                    CurrentPage = pageNumber,
+                    TotalPages = (int)Math.Ceiling((double)courseList.Count / pageSize)
+                };
+
+                ViewBag.SearchTerm = searchTerm; // Pass the search term to the view
+                return View("ReadCourses", model);
+            }
+
+ 
 
         private string HashPassword(string password)
         {

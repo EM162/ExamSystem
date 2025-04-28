@@ -21,8 +21,9 @@ public partial class Course
 
     [StringLength(255)]
     public string CourseImagePath { get; set; }
-     
-  
+    public bool IsDeleted { get; set; } = false;
+
+
     [InverseProperty("Course")]
     public virtual ICollection<Exam> Exams { get; set; } = new List<Exam>();
 

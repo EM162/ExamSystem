@@ -169,6 +169,9 @@ namespace ITI.ExamSystem.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -703,12 +706,14 @@ namespace ITI.ExamSystem.Migrations
                     b.HasOne("ITI.ExamSystem.Models.Course", null)
                         .WithMany()
                         .HasForeignKey("CourseID")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_CourseTracks_Course");
 
                     b.HasOne("ITI.ExamSystem.Models.Track", null)
                         .WithMany()
                         .HasForeignKey("TrackID")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_CourseTracks_Track");
                 });
