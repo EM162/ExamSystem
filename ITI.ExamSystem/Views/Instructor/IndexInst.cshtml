@@ -23,6 +23,7 @@
         @foreach (var inst in Model.Instructors)
         {
             <tr>
+<<<<<<< HEAD:ITI.ExamSystem/Views/Instructor/IndexInst.cshtml
                 <td>@inst.UserID</td>
                 <td>
                     @{
@@ -35,6 +36,10 @@
                         @Html.Raw(fullName)
                     }
                 </td>
+=======
+                <td>@i</td>
+                <td>@inst.FullName</td>
+>>>>>>> 2138ae456048df4d01452bf4b2520ddbfdd6bc67:ITI.ExamSystem/Views/Instructor/Index.cshtml
                 <td>@inst.Email</td>
                 <td>@inst.BranchName</td>
                 <td>

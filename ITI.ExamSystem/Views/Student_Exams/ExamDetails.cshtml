@@ -1,0 +1,29 @@
+﻿@model ExamDetailsViewModel
+
+<h2>Exam Details: @Model.ExamTitle</h2>
+<p><strong>Date:</strong> @Model.ExamDate.ToShortDateString()</p>
+<p><strong>Grade:</strong> @Model.Grade</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Selected Answer</th>
+            <th>Correct Answer</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var q in Model.Questions)
+        {
+            <tr>
+                <td>@q.QuestionText</td>
+                <td>@q.SelectedAnswer</td>
+                <td>@q.CorrectAnswer</td>
+                <td>@q.Score</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

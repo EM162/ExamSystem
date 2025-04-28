@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ITI.ExamSystem.Models;
 
+
 [Index("Email", Name = "UQ__Users__A9D10534146454C2", IsUnique = true)]
 public partial class User
 {
