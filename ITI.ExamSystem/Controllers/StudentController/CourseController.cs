@@ -24,6 +24,7 @@ namespace ITI.ExamSystem.Controllers.StudentController
             this._env = env ;    
         }
 
+        //localhost/student/course/id
         [HttpGet("student/course/{studentID}")]
 
         public async Task< IActionResult> StudentCourse(int studentID)
@@ -43,7 +44,7 @@ namespace ITI.ExamSystem.Controllers.StudentController
 
         }
 
-
+        // localhost/student/topics/id
         [HttpGet("student/topics/{courseID}")]
         public async Task<IActionResult> MyTopics (int courseID)
         {
@@ -57,7 +58,7 @@ namespace ITI.ExamSystem.Controllers.StudentController
 
         // upload images 
 
-
+        // localhost/course/createImage
         [HttpGet("/course/createImage")]
         public IActionResult CreateImage()
         {
@@ -65,48 +66,7 @@ namespace ITI.ExamSystem.Controllers.StudentController
             ViewBag.Courses = new SelectList(courses, "CourseID", "Name");
             return View();
         }
-        /*
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-      
-        public async Task<IActionResult> CreateImage(int CourseID, IFormFile ImageFile)
-        {
-            var course = await db.Courses.FindAsync(CourseID);
-            if (course == null)
-            {
        
-                ViewBag.Courses = new SelectList(db.Courses.ToList(), "Id", "Name");
-                return View();
-            }
-            if (ModelState.IsValid)
-            {
-                if (ImageFile != null && ImageFile.Length > 0)
-                {
-                    string uploadDir = Path.Combine(_env.WebRootPath, "images");
-                    if (!Directory.Exists(uploadDir))
-                        Directory.CreateDirectory(uploadDir);
-
-                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(ImageFile.FileName);
-                    string filePath = Path.Combine(uploadDir, uniqueFileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await ImageFile.CopyToAsync(stream);
-                    }
-
-                   
-                    course.CourseImagePath = "/images/" + uniqueFileName;
-                }
-
-              
-                await db.SaveChangesAsync();
-                return RedirectToAction("CreateImage");
-            }
-            ViewBag.Courses = new SelectList(db.Courses.ToList(), "CourseID", "Name");
-            return View();
-          
-        }
-        */
 
         [HttpPost]
         public async Task<IActionResult> CreateImage(IFormFile imageFile, int CourseID)
@@ -116,7 +76,7 @@ namespace ITI.ExamSystem.Controllers.StudentController
                 var extension = Path.GetExtension(imageFile.FileName).ToLower();
                 if (!new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension))
                 {
-                    // You can show a message or redirect with an error
+                  
                     TempData["Error"] = "Invalid image format. Please upload JPG, PNG, or GIF.";
                     return RedirectToAction(" ",new { id = CourseID });
                 }
@@ -131,13 +91,12 @@ namespace ITI.ExamSystem.Controllers.StudentController
                 var fileName = Guid.NewGuid().ToString() + extension;
                 var imagePath = Path.Combine("wwwroot/images", fileName);
 
-                // Save image to wwwroot/images
                 using (var stream = new FileStream(imagePath, FileMode.Create))
                 {
                     await imageFile.CopyToAsync(stream);
                 }
 
-                // Save image path to DB
+            
                
                 course.CourseImagePath = "/images/" + fileName;
 

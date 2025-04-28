@@ -59,7 +59,7 @@ namespace ITI.ExamSystem.Controllers.StudentController
                 var extension = Path.GetExtension(imageFile.FileName).ToLower();
                 if (!new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension))
                 {
-                    // You can show a message or redirect with an error
+
                     TempData["Error"] = "Invalid image format. Please upload JPG, PNG, or GIF.";
                     return RedirectToAction("Profile", new { id = studentId });
                 }
@@ -70,7 +70,6 @@ namespace ITI.ExamSystem.Controllers.StudentController
                 var fileName = Guid.NewGuid().ToString() + extension;
                 var imagePath = Path.Combine("wwwroot/images", fileName);
 
-                // Save image to wwwroot/images
                 using (var stream = new FileStream(imagePath, FileMode.Create))
                 {
                     await imageFile.CopyToAsync(stream);

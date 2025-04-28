@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\CourseController\" />
     <Folder Include="wwwroot\images\profiles\" />
   </ItemGroup>
 
