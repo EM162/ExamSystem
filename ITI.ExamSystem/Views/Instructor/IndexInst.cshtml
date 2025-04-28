@@ -3,31 +3,43 @@
     ViewData["Title"] = "Instructors";
     var i = (Model.CurrentPage - 1) * 10 + 1;
 }
+<div class="content-container">
+    <div class="welcome-section">
+          <a asp-action="Create" class="createInst">Add Instructor</a>
 
-<h2 class="mb-4">Instructors</h2>
-
-<a asp-action="Create" class="btn btn-primary mb-3">➕ Add Instructor</a>
-
-<!-- Active Instructors Table -->
-<h4>Active Instructors</h4>
-<table class="table table-bordered table-striped">
-    <thead class="table-dark">
-        <tr>
-            <th>#</th>
-            <th>Full Name</th>
-            <th>Email</th>
-            <th>Branch</th>
-            <th>Tracks</th>
-            <th>Intakes</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+               <tr>
+                   <th>#</th>
+                   <th>Full Name</th>
+                   <th>Email</th>
+                   <th>Branch</th>
+                   <th>Tracks</th>
+                   <th>Intakes</th>
+                   <th>Actions</th>
+               </tr>
+            </thead>
+   <tbody>
         @foreach (var inst in Model.Instructors)
         {
             <tr>
+<<<<<<< HEAD:ITI.ExamSystem/Views/Instructor/IndexInst.cshtml
+                <td>@inst.UserID</td>
+                <td>
+                    @{
+                        var fullName = inst.FullName;
+                        if (!string.IsNullOrEmpty(ViewBag.searchTerm))
+                        {
+                            var searchTerm = ViewBag.searchTerm as string;
+                            fullName = fullName.Replace(searchTerm, $"<strong>{searchTerm}</strong>", StringComparison.OrdinalIgnoreCase);
+                        }
+                        @Html.Raw(fullName)
+                    }
+                </td>
+=======
                 <td>@i</td>
                 <td>@inst.FullName</td>
+>>>>>>> 2138ae456048df4d01452bf4b2520ddbfdd6bc67:ITI.ExamSystem/Views/Instructor/Index.cshtml
                 <td>@inst.Email</td>
                 <td>@inst.BranchName</td>
                 <td>
@@ -58,12 +70,13 @@
         @for (int page = 1; page <= Model.TotalPages; page++)
         {
             <li class="page-item @(page == Model.CurrentPage ? "active" : "")">
-                <a class="page-link" asp-action="Index" asp-route-page="@(page)">@(page)</a>
+                        <a class="page-link" asp-action="IndexInst" asp-route-page="@(page)" asp-route-searchTerm="@ViewBag.searchTerm">@(page)</a>
             </li>
         }
     </ul>
 </nav>
-
+</div>
+</div>
 <!-- Deleted Instructors -->
 @if (Model.DeletedInstructors.Any())
 {
