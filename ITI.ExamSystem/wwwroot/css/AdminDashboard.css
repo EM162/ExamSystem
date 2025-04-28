@@ -347,6 +347,18 @@ body {
     flex: 1 1 calc(25% - 20px);
     text-decoration: none;
 }
+.createInst {
+    top: 20px;
+    right: 20px;
+    background-color: #7b61ff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #fff;
+    margin-bottom: 20px;
+    flex: 1 1 calc(25% - 20px);
+    text-decoration: none;
+}
 /* Pagination Container */
 .pagination-container {
     display: flex;

@@ -1,4 +1,5 @@
 ﻿@model ITI.ExamSystem.Models.StudentIndexViewModel
+@using X.PagedList.Mvc.Core;
 @{
     ViewData["Title"] = "Students";
     Layout = "_Layout"; // Use the custom admin layout
@@ -21,13 +22,13 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var student in Model.ActiveStudents)
+                @foreach (var student in Model.Students)
                 {
                     <tr>
                         <td>@student.UserID</td>
                         <td>
                             @{
-                                var fullName = student.User.FullName;
+                                var fullName = student.FullName;
                                 if (!string.IsNullOrEmpty(ViewBag.searchTerm))
                                 {
                                     var searchTerm = ViewBag.searchTerm as string;
@@ -36,13 +37,23 @@
                                 @Html.Raw(fullName)
                             }
                         </td>
-                        <td>@student.User.Email</td>
-                        <td>@student.Branch.BranchName</td>
-                        <td>@student.Track.TrackName</td>
-                        <td>@student.Intake.IntakeName</td>
+                        <td>@student.Email</td>
+                        <td>@student.BranchName</td>
                         <td>
-                            <a asp-action="EditStudent" asp-route-id="@student.UserID" class="btn btn-warning">Edit</a>
-                            <a asp-action="DeleteStudent" asp-route-id="@student.UserID" class="btn btn-danger">Delete</a>
+                            @foreach (var track in student.Tracks.Split(","))
+                            {
+                                <div>@track.Trim()</div>
+                            }
+                        </td>
+                        <td>
+                            @foreach (var intake in student.Intakes.Split(","))
+                            {
+                                <div>@intake.Trim()</div>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="EditStudent" asp-route-id="@student.UserID" class="btn  btn-md">📝</a>
+                            <a asp-action="DeleteStudent" asp-route-id="@student.UserID" class="btn btn-sm">❌</a>
                         </td>
                     </tr>
                 }
@@ -54,41 +65,42 @@
                 @for (int page = 1; page <= Model.TotalPages; page++)
                 {
                     <li class="page-item @(page == Model.CurrentPage ? "active" : "")">
-                        <a class="page-link" asp-action="ReadStudents" asp-route-page="@(page)">@(page)</a>
+                        <a class="page-link" asp-action="SearchStudents" asp-route-page="@(page)" asp-route-searchTerm="@ViewBag.searchTerm">@(page)</a>
                     </li>
                 }
             </ul>
         </nav>
     </div>
-    <!-- Deleted Students Table -->
-    @if (Model.DeletedStudents.Any())
-    {
-        <h4 class="mt-5">InActive Students</h4>
-        <table class="table table-bordered table-striped">
-            <thead class="table-secondary">
-                <tr>
-                    <th>ID</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{foreach (var student in Model.DeletedStudents)
-                    {
-                        <tr>
-                            <td>@student.UserID</td>
-                            <td>@student.FullName</td>
-                            <td>@student.Email</td>
-                            <td>
-                                <form asp-action="Reactivate" asp-route-id="@student.UserID" method="post" style="display:inline">
-                                    <button type="submit" class="btn btn-sm btn-success">Reactivate</button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    }
 </div>
+<!-- Deleted Instructors -->
+@if (Model.DeletedStudents.Any())
+{
+    <h4 class="mt-5">Inactive Students</h4>
+    <table class="table table-bordered table-striped">
+        <thead class="table-secondary">
+            <tr>
+                <th>#</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var item in Model.DeletedStudents)
+                {
+                    <tr>
+                        <td>@item.UserID</td>
+                        <td>@item.FullName</td>
+                        <td>@item.Email</td>
+                        <td>
+                            <form asp-action="Reactivate" asp-route-id="@item.UserID" method="post" style="display:inline">
+                                <button type="submit" class="btn btn-success btn-sm">Reactivate</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}

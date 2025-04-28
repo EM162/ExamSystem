@@ -1,0 +1,121 @@
+﻿
+@model StudentExamsViewModel
+
+@{
+    ViewData["Title"] = "Exams";
+}
+
+<h2 class="mb-4">📝 My Exams</h2>
+
+<div class="mb-3">
+    <form method="get">
+        <input type="text" name="SearchQuery" placeholder="Search by course name..." class="form-control mb-2" value="@Model.SearchQuery" />
+        <input type="date" name="FilterDate" class="form-control mb-2" value="@Model.FilterDate?.ToString("yyyy-MM-dd")" />
+        <button type="submit" class="btn btn-secondary">Search</button>
+    </form>
+</div>
+
+<ul class="nav nav-tabs" id="examTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab">Upcoming Exams</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="previous-tab" data-bs-toggle="tab" data-bs-target="#previous" type="button" role="tab">Previous Exams</button>
+    </li>
+</ul>
+<div class="tab-content mt-3" id="examTabsContent">
+    <!-- Upcoming Exams -->
+    <div class="tab-pane fade show active" id="upcoming" role="tabpanel">
+        @if (Model.UpcomingExams.Any())
+        {
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Course</th>
+                        <th>Date</th>
+                        <th>Track</th>
+                        <th>Intake</th>
+                        <th>Branch</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.PreviousExams.Any())
+                    {
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Exam ID</th>
+                                    <th>Grade</th>
+                                    <th>Exam Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var exam in Model.PreviousExams)
+                                {
+                                    <tr>
+                                        <td>@exam.ExamID</td>
+                                        <td>@exam.Grade</td>
+                                        <td>@exam.Exam?.ExamDate?.ToString("yyyy-MM-dd")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p>No previous exams.</p>
+                    }
+
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="text-muted">No upcoming exams.</p>
+        }
+    </div>
+
+    <!-- Previous Exams -->
+    <div class="tab-pane fade" id="previous" role="tabpanel">
+        @if (Model.PreviousExams.Any())
+        {
+            <table class="table table-bordered">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Exam</th>
+                        <th>Date</th>
+                        <th>Grade</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var userExam in Model.PreviousExams)
+                    {
+                        <tr>
+                            <td>@userExam.Exam?.ExamType</td>
+                            <td>@userExam.Exam?.ExamDate?.ToString("yyyy-MM-dd")</td>
+                            <td>@userExam.Grade</td>
+                            <td>
+                                <a asp-action="ExamDetails" asp-route-examId="@userExam.ExamID" class="btn btn-info btn-sm">Details</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="text-muted">No previous exams.</p>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const triggerTab = new bootstrap.Tab(document.querySelector('#examTabs .nav-link.active'));
+        triggerTab.show();
+    </script>
+}
+
+

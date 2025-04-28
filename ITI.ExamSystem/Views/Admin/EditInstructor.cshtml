@@ -1,0 +1,82 @@
+﻿@model ITI.ExamSystem.Models.InstructorViewModel
+
+@{
+    ViewData["Title"] = "Edit Instructor";
+}
+
+<h2>Edit Instructor</h2>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="UserID" />
+    <input type="hidden" asp-for="ExistingImagePath" />
+
+    <div class="mb-3">
+        <label asp-for="FullName" class="form-label"></label>
+        <input asp-for="FullName" class="form-control" />
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label">New Password (optional)</label>
+        <input asp-for="Password" class="form-control" type="password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.ExistingImagePath))
+    {
+        <div class="mb-3">
+            <label class="form-label">Current Image:</label><br />
+            <img src="~/images/profiles/@Model.ExistingImagePath" width="100" class="rounded shadow-sm" />
+        </div>
+    }
+
+    <div class="mb-3">
+        <label asp-for="ProfileImage" class="form-label">Change Image</label>
+        <input asp-for="ProfileImage" type="file" class="form-control" />
+        <span asp-validation-for="ProfileImage" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Assign Tracks:</label>
+        @foreach (var track in Model.AvailableTracks)
+        {
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input"
+                       name="SelectedTrackIDs"
+                       value="@track.TrackID"
+                       id="track_@track.TrackID"
+                @(Model.SelectedTrackIDs.Contains(track.TrackID) ? "checked" : "") />
+                <label class="form-check-label" for="track_@track.TrackID">@track.TrackName</label>
+            </div>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label>Assign Intakes:</label>
+        @foreach (var intake in Model.AvailableIntakes)
+        {
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input"
+                       name="SelectedIntakeIDs"
+                       value="@intake.IntakeID"
+                       id="intake_@intake.IntakeID"
+                @(Model.SelectedIntakeIDs.Contains(intake.IntakeID) ? "checked" : "") />
+                <label class="form-check-label" for="intake_@intake.IntakeID">@intake.IntakeName</label>
+            </div>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Instructor</button>
+    <a asp-action="ReadInstructors" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

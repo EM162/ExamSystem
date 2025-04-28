@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
+using X.PagedList.Extensions;
 
 namespace ITI.ExamSystem.Controllers
 {
@@ -19,32 +20,57 @@ namespace ITI.ExamSystem.Controllers
             _db = db;
         }
 
-        public IActionResult Index(int page = 1, int pageSize = 10)
+        public IActionResult IndexInst(int page = 1, int pageSize = 7)
         {
-            var all = _db.IntakeBranchTrackUsers
-                .Where(x => x.BranchID == AdminBranchID && !x.User.IsDeleted)
-                .Include(x => x.User)
-                .Include(x => x.Track)
-                .Include(x => x.Intake)
-                .Include(x => x.Branch)
+            var instructorRoleId = _db.Roles.FirstOrDefault(r => r.RoleName == "Instructor")?.RoleID;
+
+            var instructorsQuery = _db.Users
+                .Include(u => u.Roles)
+                .Include(u => u.IntakeBranchTrackUsers)
+                    .ThenInclude(x => x.Intake)
+                .Include(u => u.IntakeBranchTrackUsers)
+                    .ThenInclude(x => x.Track)
+                .Include(u => u.IntakeBranchTrackUsers)
+                    .ThenInclude(x => x.Branch)
+                .Where(u => !u.IsDeleted && u.Roles.Any(r => r.RoleID == instructorRoleId))
+                .ToList();
+
+            var instructorList = instructorsQuery
+                .Select(u => new InstructorViewModel
+                {
+                    UserID = u.UserID,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    BranchName = u.IntakeBranchTrackUsers.FirstOrDefault()?.Branch?.BranchName ?? "N/A",
+                    Tracks = string.Join(",", u.IntakeBranchTrackUsers.Select(x => x.Track?.TrackName).Distinct()),
+                    Intakes = string.Join(",", u.IntakeBranchTrackUsers.Select(x => x.Intake?.IntakeName).Distinct()),
+                    ExistingImagePath = u.ProfileImagePath
+                })
+                .ToList();
+
+            var paged = instructorList
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToList();
 
             var deleted = _db.Users
-                .Where(u => u.IsDeleted)
+                .Include(u => u.Roles)
+                .Where(u => u.IsDeleted && u.Roles.Any(r => r.RoleName == "Instructor"))
                 .ToList();
-
-            var paged = all.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             var model = new InstructorIndexViewModel
             {
-                ActiveInstructors = paged,
+                Instructors = paged,
                 DeletedInstructors = deleted,
                 CurrentPage = page,
-                TotalPages = (int)Math.Ceiling((double)all.Count / pageSize)
+                TotalPages = (int)Math.Ceiling((double)instructorList.Count / pageSize)
             };
 
             return View(model);
         }
+
+
+
 
         public IActionResult Create()
         {
@@ -119,7 +145,7 @@ namespace ITI.ExamSystem.Controllers
             }
 
             _db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexInst");
         }
 
 
@@ -221,7 +247,7 @@ namespace ITI.ExamSystem.Controllers
             }
 
             _db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexInst");
         }
 
         public IActionResult Delete(int id)
@@ -237,13 +263,14 @@ namespace ITI.ExamSystem.Controllers
             var instructor = _db.Users
                 .Include(u => u.Roles)
                 .FirstOrDefault(u => u.UserID == id && !u.IsDeleted);
+
             if (instructor == null) return NotFound();
 
             instructor.IsDeleted = true;
             _db.Users.Update(instructor);
             _db.SaveChanges();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexInst");
         }
 
         [HttpPost]
@@ -292,10 +319,39 @@ namespace ITI.ExamSystem.Controllers
 
             _db.SaveChanges();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexInst");
         }
 
+          public IActionResult SearchInstructors(string searchTerm, int? page)
+        {
+            int pageSize = 7; // Number of students per page
+            int pageNumber = page ?? 1; // Current page number
+            var instructorsQuery = _db.Users
+                        .Where(u => u.Roles.Any(r => r.RoleName == "Instructor") &&
+                       (string.IsNullOrEmpty(searchTerm) || u.FullName.ToLower().Contains(searchTerm.ToLower())))
+                    .ToList();
+            var instructors = instructorsQuery.ToPagedList(pageNumber, pageSize);
 
+            var model = new InstructorIndexViewModel
+            {
+                Instructors = instructors.Select(u => new InstructorViewModel
+                {
+                    UserID = u.UserID,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    BranchName = u.IntakeBranchTrackUsers.FirstOrDefault()?.Branch?.BranchName ?? "N/A",
+                    Tracks = string.Join(",", u.IntakeBranchTrackUsers.Select(x => x.Track?.TrackName).Distinct()),
+                    Intakes = string.Join(",", u.IntakeBranchTrackUsers.Select(x => x.Intake?.IntakeName).Distinct()),
+                    ExistingImagePath = u.ProfileImagePath
+                }).ToList(),
+                CurrentPage = pageNumber,
+                TotalPages = (int)Math.Ceiling((double)instructorsQuery.Count() / pageSize),
+                DeletedInstructors = new List<User>(),
+            };
+           
+            ViewBag.SearchTerm = searchTerm; // Pass the search term to the view
+            return View("IndexInst", model);
+        }
         private string HashPassword(string password)
         {
             using var sha = SHA256.Create();

@@ -12,8 +12,10 @@ namespace ITI.ExamSystem.Models
         [Display(Name = "Full Name")]
         public string FullName { get; set; }
 
-        [Required]
+        [StringLength(100)]
         [EmailAddress]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+       ErrorMessage = "Invalid email address format.")]
         public string Email { get; set; }
 
         [DataType(DataType.Password)]
@@ -23,7 +25,9 @@ namespace ITI.ExamSystem.Models
 
         public int BranchID { get; set; }
 
-
+        public string BranchName { get; set; }
+        public string Tracks { get; set; }
+        public string Intakes { get; set; }
 
         [Display(Name = "Profile Image")]
         [ValidateNever]
