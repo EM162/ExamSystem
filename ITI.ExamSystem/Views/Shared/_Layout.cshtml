@@ -2,28 +2,28 @@
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString()?.ToLower();
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString()?.ToLower();
 
-    string searchAction = "SearchStudents"; // Default action
+    string searchAction = "Dashboard"; // Default action
 
-    if (currentAction == "instructors")
+    if (currentAction == "readinstructors") // Fully lowercase
     {
         searchAction = "SearchInstructors";
     }
-    else if (currentAction == "courses")
+    else if (currentAction == "courses") // Fully lowercase
     {
         searchAction = "SearchCourses";
     }
-    else if (currentAction == "questions")
+    else if (currentAction == "questions") // Fully lowercase
     {
         searchAction = "SearchQuestions";
     }
-	else if (currentAction == "readstudents")
-	{
-		searchAction = "SearchStudents";
-	}
-	else if (currentAction == "dashboard")
-	{
-		searchAction = "Dashboard";
-	}
+    else if (currentAction == "readstudents") // Fully lowercase
+    {
+        searchAction = "SearchStudents";
+    }
+    else if (currentAction == "dashboard") // Fully lowercase
+    {
+        searchAction = "Dashboard";
+    }
 }
 
 
@@ -60,7 +60,7 @@
                     <a class=" fas fa-th-large" asp-controller="Admin" asp-action="ReadStudents">Students</a>
                 </li>
                 <li>
-                    <a asp-controller="Admin" asp-action="Instructors">Instructors</a>
+                    <a asp-controller="Admin" asp-action="ReadInstructors">Instructors</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="Admin" asp-action="Courses">Courses</a>
@@ -86,7 +86,7 @@
                         <!-- Clear Search Button -->
                         @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
                         {
-                            <a asp-controller="Admin" asp-action="ReadStudents" class="btn btn-danger ml-2">
+                            <a asp-controller="Admin" asp-action="@searchAction" class="btn btn-danger ml-2">
                                 <i class="fas fa-times"></i> Clear Search
                             </a>
                         }

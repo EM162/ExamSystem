@@ -1,34 +1,32 @@
-﻿@model ITI.ExamSystem.Models.StudentIndexViewModel
-@using X.PagedList.Mvc.Core;
+﻿@model ITI.ExamSystem.Models.InstructorIndexViewModel
 @{
-    ViewData["Title"] = "Students";
-    Layout = "_Layout"; // Use the custom admin layout
+    ViewData["Title"] = "Instructors";
+    var i = (Model.CurrentPage - 1) * 10 + 1;
 }
-
 <div class="content-container">
     <div class="welcome-section">
-        <a asp-action="CreateStudent" class="createStudent">Add New Student</a>
+        <a asp-action="Create" class="createInst">Add Instructor</a>
 
         <table class="table table-bordered table-striped">
-            <thead>
+            <thead class="table-dark">
                 <tr>
-                    <th>ID</th>
+                    <th>#</th>
                     <th>Full Name</th>
                     <th>Email</th>
                     <th>Branch</th>
-                    <th>Track</th>
-                    <th>Intake</th>
+                    <th>Tracks</th>
+                    <th>Intakes</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var student in Model.Students)
+                @foreach (var inst in Model.Instructors)
                 {
                     <tr>
-                        <td>@student.UserID</td>
+                        <td>@inst.UserID</td>
                         <td>
                             @{
-                                var fullName = student.FullName;
+                                var fullName = inst.FullName;
                                 if (!string.IsNullOrEmpty(ViewBag.searchTerm))
                                 {
                                     var searchTerm = ViewBag.searchTerm as string;
@@ -37,35 +35,37 @@
                                 @Html.Raw(fullName)
                             }
                         </td>
-                        <td>@student.Email</td>
-                        <td>@student.BranchName</td>
+                        <td>@inst.Email</td>
+                        <td>@inst.BranchName</td>
                         <td>
-                            @foreach (var track in student.Tracks.Split(","))
+                            @foreach (var track in inst.Tracks.Split(","))
                             {
                                 <div>@track.Trim()</div>
                             }
                         </td>
                         <td>
-                            @foreach (var intake in student.Intakes.Split(","))
+                            @foreach (var intake in inst.Intakes.Split(","))
                             {
                                 <div>@intake.Trim()</div>
                             }
                         </td>
                         <td>
-                            <a asp-action="EditStudent" asp-route-id="@student.UserID" class="btn  btn-md">📝</a>
-                            <a asp-action="DeleteStudent" asp-route-id="@student.UserID" class="btn btn-sm">❌</a>
+                            <a asp-action="Edit" asp-route-id="@inst.UserID" class="btn  btn-md">📝</a>
+                            <a asp-action="Delete" asp-route-id="@inst.UserID" class="btn btn-sm">❌</a>
                         </td>
                     </tr>
+                    i++;
                 }
             </tbody>
         </table>
+
         <!-- Pagination -->
-        <nav aria-label="Student pagination">
+        <nav aria-label="Instructor pagination">
             <ul class="pagination justify-content-center">
                 @for (int page = 1; page <= Model.TotalPages; page++)
                 {
                     <li class="page-item @(page == Model.CurrentPage ? "active" : "")">
-                        <a class="page-link" asp-action="SearchStudents" asp-route-page="@(page)" asp-route-searchTerm="@ViewBag.searchTerm">@(page)</a>
+                        <a class="page-link" asp-action="ReadInstructors" asp-route-page="@(page)" asp-route-searchTerm="@ViewBag.searchTerm">@(page)</a>
                     </li>
                 }
             </ul>
@@ -73,9 +73,9 @@
     </div>
 </div>
 <!-- Deleted Instructors -->
-@if (Model.DeletedStudents.Any())
+@if (Model.DeletedInstructors.Any())
 {
-    <h4 class="mt-5">Inactive Students</h4>
+    <h4 class="mt-5">Inactive Instructors</h4>
     <table class="table table-bordered table-striped">
         <thead class="table-secondary">
             <tr>
@@ -87,10 +87,11 @@
         </thead>
         <tbody>
             @{
-                foreach (var item in Model.DeletedStudents)
+                int j = 1;
+                foreach (var item in Model.DeletedInstructors)
                 {
                     <tr>
-                        <td>@item.UserID</td>
+                        <td>@j</td>
                         <td>@item.FullName</td>
                         <td>@item.Email</td>
                         <td>
@@ -99,6 +100,7 @@
                             </form>
                         </td>
                     </tr>
+                    j++;
                 }
             }
         </tbody>
