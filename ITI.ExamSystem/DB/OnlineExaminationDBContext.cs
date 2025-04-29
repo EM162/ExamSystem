@@ -70,11 +70,11 @@ public partial class OnlineExaminationDBContext : IdentityDbContext<ApplicationU
                     "CourseTrack",
                     r => r.HasOne<Track>().WithMany()
                         .HasForeignKey("TrackID")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK_CourseTracks_Track"),
                     l => l.HasOne<Course>().WithMany()
                         .HasForeignKey("CourseID")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK_CourseTracks_Course"),
                     j =>
                     {

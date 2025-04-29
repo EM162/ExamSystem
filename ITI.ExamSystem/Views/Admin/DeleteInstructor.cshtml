@@ -10,7 +10,7 @@
 <div>
     <h4>@Model.FullName</h4>
     <p>@Model.Email</p>
-    <form asp-action="Delete" asp-route-id="@Model.UserID" method="post">
+    <form asp-action="DeleteInstructor" asp-route-id="@Model.UserID" method="post">
         <input type="submit" value="Confirm Delete" class="btn btn-danger" />
         <a asp-action="ReadInstructors" class="btn btn-secondary">Cancel</a>
     </form>
