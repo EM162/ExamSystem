@@ -26,13 +26,25 @@ namespace ITI.ExamSystem.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
+        //public AccountController(UserManager<ApplicationUser> userManager,
+        //                         SignInManager<ApplicationUser> signInManager,
+        //                         RoleManager<IdentityRole> roleManager)
+        //{
+        //    _userManager = userManager;
+        //    _signInManager = signInManager;
+        //    _roleManager = roleManager;
+        //}
+
+        private readonly OnlineExaminationDBContext _db;
         public AccountController(UserManager<ApplicationUser> userManager,
                                  SignInManager<ApplicationUser> signInManager,
-                                 RoleManager<IdentityRole> roleManager)
+                                 RoleManager<IdentityRole> roleManager,
+                                 OnlineExaminationDBContext db)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _db = db;
         }
 
 
@@ -177,7 +189,43 @@ namespace ITI.ExamSystem.Controllers
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, selectedRole.Name);
-                
+
+                //--
+                var customUser = new User
+                {
+                    FullName = model.FullName,
+                    Email = model.Email,
+                    PasswordHash = user.PasswordHash,
+                    RegistrationDate = DateTime.UtcNow,
+                    IdentityUserId = user.Id,
+                    IsDeleted = false
+                };
+                _db.Users.Add(customUser);
+                await _db.SaveChangesAsync();
+
+                var trackedUser = await _db.Users
+                    .Include(u => u.Roles)
+                    .FirstOrDefaultAsync(u => u.IdentityUserId == user.Id);
+
+                var selectedRoleName = model.Role;
+
+                var dbRole = await _db.Roles
+                    .FirstOrDefaultAsync(r => r.RoleName.ToLower() == selectedRoleName.ToLower());
+
+                if (dbRole == null)
+                {
+                    ModelState.AddModelError("", $"Role '{selectedRoleName}' not found in DB.");
+                    return View("FirstRegister", model);
+                }
+
+
+                if (trackedUser != null && dbRole != null)
+                {
+                    trackedUser.Roles.Add(dbRole);
+                    await _db.SaveChangesAsync();
+                }
+                //--
+
                 return RedirectToAction("Index", "Home");
             }
 
@@ -264,13 +312,50 @@ namespace ITI.ExamSystem.Controllers
                 //Temp creating the role
                 //if (!await _roleManager.RoleExistsAsync(role))
                 //    await _roleManager.CreateAsync(new IdentityRole(role));
+
                 if (!await _roleManager.RoleExistsAsync(role))
                 {
                     ModelState.AddModelError("", $"The role '{role}' does not exist.");
                     return View("FirstRegister", model);
                 }
-
                 await _userManager.AddToRoleAsync(user, role);
+
+                //--
+                var customUser = new User
+                {
+                    FullName = model.FullName,
+                    Email = model.Email,
+                    PasswordHash = user.PasswordHash,
+                    RegistrationDate = DateTime.UtcNow,
+                    IdentityUserId = user.Id,
+                    IsDeleted = false
+                };
+                _db.Users.Add(customUser);
+                await _db.SaveChangesAsync();
+
+                var trackedUser = await _db.Users
+                    .Include(u => u.Roles)
+                    .FirstOrDefaultAsync(u => u.IdentityUserId == user.Id);
+
+                var selectedRoleName = model.Role;
+
+                var dbRole = await _db.Roles
+                    .FirstOrDefaultAsync(r => r.RoleName.ToLower() == selectedRoleName.ToLower());
+
+                if (dbRole == null)
+                {
+                    ModelState.AddModelError("", $"Role '{selectedRoleName}' not found in DB.");
+                    return View("FirstRegister", model);
+                }
+
+
+                if (trackedUser != null && dbRole != null)
+                {
+                    trackedUser.Roles.Add(dbRole);
+                    await _db.SaveChangesAsync(); 
+                }
+                //--
+
                 return RedirectToAction("Index", "Home");
             }
 

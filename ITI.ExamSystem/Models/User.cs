@@ -15,6 +15,8 @@ public partial class User
     [Key]
     public int UserID { get; set; }
 
+    public string IdentityUserId { get; set; }
+
     [Required]
     [StringLength(100)]
     public string FullName { get; set; }

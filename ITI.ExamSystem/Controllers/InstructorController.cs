@@ -1,6 +1,8 @@
 ﻿using ITI.ExamSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using X.PagedList.Extensions;
@@ -12,7 +14,7 @@ namespace ITI.ExamSystem.Controllers
         private readonly OnlineExaminationDBContext _db;
 
         // Static admin BranchID for testing (replace with claims later)
-        private const int AdminBranchID = 1;
+        //private const int AdminBranchID = 1;
         private const int PageSize = 10;
 
         public InstructorController(OnlineExaminationDBContext db)
@@ -20,6 +22,34 @@ namespace ITI.ExamSystem.Controllers
             _db = db;
         }
 
+        private int GetCurrentUserId()
+        {
+            var identityId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(identityId))
+                throw new Exception("User not authenticated");
+
+            var user = _db.Users.FirstOrDefault(u => u.IdentityUserId == identityId);
+            if (user == null)
+                throw new Exception("User not found in system");
+
+            return user.UserID;
+        }
+
+
+        private int GetAdminBranchId()
+        {
+            var userId = GetCurrentUserId();
+            var branchId = _db.IntakeBranchTrackUsers
+                              .Where(x => x.UserID == userId)
+                              .Select(x => x.BranchID)
+                              .FirstOrDefault();
+
+            if (branchId == 0)
+                throw new InvalidOperationException("Branch not found for current admin.");
+            return branchId;
+        }
+
+        [Authorize(Roles = "Admin,Instructor,SuperAdmin")]
         public IActionResult IndexInst(int page = 1, int pageSize = 7)
         {
             var instructorRoleId = _db.Roles.FirstOrDefault(r => r.RoleName == "Instructor")?.RoleID;
@@ -137,7 +167,7 @@ namespace ITI.ExamSystem.Controllers
                     _db.IntakeBranchTrackUsers.Add(new IntakeBranchTrackUser
                     {
                         UserID = instructor.UserID,
-                        BranchID = AdminBranchID,
+                        BranchID = GetAdminBranchId(),
                         IntakeID = intakeId,
                         TrackID = trackId
                     });
@@ -155,7 +185,7 @@ namespace ITI.ExamSystem.Controllers
             if (instructor == null) return NotFound();
 
             var selected = _db.IntakeBranchTrackUsers
-                .Where(x => x.UserID == id && x.BranchID == AdminBranchID)
+                .Where(x => x.UserID == id && x.BranchID == GetAdminBranchId())
                 .ToList();
 
             var model = new InstructorViewModel
@@ -226,7 +256,7 @@ namespace ITI.ExamSystem.Controllers
             _db.SaveChanges();
 
             var existingAssignments = _db.IntakeBranchTrackUsers
-                .Where(x => x.UserID == model.UserID && x.BranchID == AdminBranchID)
+                .Where(x => x.UserID == model.UserID && x.BranchID == GetAdminBranchId())
                 .ToList();
 
             _db.IntakeBranchTrackUsers.RemoveRange(existingAssignments);
@@ -239,7 +269,7 @@ namespace ITI.ExamSystem.Controllers
                     _db.IntakeBranchTrackUsers.Add(new IntakeBranchTrackUser
                     {
                         UserID = model.UserID,
-                        BranchID = AdminBranchID,
+                        BranchID = GetAdminBranchId(),
                         IntakeID = intakeId,
                         TrackID = trackId
                     });
@@ -296,7 +326,7 @@ namespace ITI.ExamSystem.Controllers
 
             // Re-assign intake/track if needed — make sure they are materialized
             var latestAssignments = _db.IntakeBranchTrackUsers
-                .Where(x => x.UserID == id && x.BranchID == AdminBranchID)
+                .Where(x => x.UserID == id && x.BranchID == GetAdminBranchId())
                 .ToList();  // ✅ forces query execution
 
             if (!latestAssignments.Any())
@@ -312,7 +342,7 @@ namespace ITI.ExamSystem.Controllers
                         UserID = id,
                         IntakeID = defaultIntake.IntakeID,
                         TrackID = defaultTrack.TrackID,
-                        BranchID = AdminBranchID
+                        BranchID = GetAdminBranchId()
                     });
                 }
             }

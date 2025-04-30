@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Security.Claims;
 
 namespace ITI.ExamSystem.Controllers
 {
@@ -14,9 +15,24 @@ namespace ITI.ExamSystem.Controllers
             db = _db;
         }
 
+        private int GetCurrentUserId()
+        {
+            var identityId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(identityId))
+                throw new Exception("User not authenticated");
+
+            var user = db.Users.FirstOrDefault(u => u.IdentityUserId == identityId);
+            if (user == null)
+                throw new Exception("User not found in system");
+
+            return user.UserID;
+        }
+
+
+
         public IActionResult Start(int examId)
         {
-            int currentUserId = 1;
+            int currentUserId = GetCurrentUserId();
 
             var userExam = db.UserExams
                 .FirstOrDefault(ue => ue.ExamID == examId && ue.UserID == currentUserId && ue.Grade != null);
@@ -32,7 +48,7 @@ namespace ITI.ExamSystem.Controllers
 
         public IActionResult Question(int examId, int index)
         {
-            int currentUserId = 1;
+            int currentUserId = GetCurrentUserId();
 
             var userExam = db.UserExams
                 .FirstOrDefault(ue => ue.ExamID == examId && ue.UserID == currentUserId && ue.Grade != null && ue.Grade != 0);
@@ -101,7 +117,7 @@ namespace ITI.ExamSystem.Controllers
         [HttpPost]
         public IActionResult SubmitAnswer(QuestionViewModel model)
         {
-            int currentUserId = 1;
+            int currentUserId = GetCurrentUserId();
 
             var choice = db.QuestionChoices
                 .FirstOrDefault(c => c.ChoiceID == model.SelectedChoiceID);
@@ -162,7 +178,7 @@ namespace ITI.ExamSystem.Controllers
 
         public IActionResult Summary(int examId)
         {
-            int currentUserId = 1;
+            int currentUserId = GetCurrentUserId();
 
             var exam = db.Exams
                 .Include(e => e.Course)
@@ -186,9 +202,6 @@ namespace ITI.ExamSystem.Controllers
 
             return View(model);
         }
-
-
-
 
     }
 

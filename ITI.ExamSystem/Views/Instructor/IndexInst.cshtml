@@ -27,18 +27,17 @@
                 <td>
                     @{
                         var fullName = inst.FullName;
-                        if (!string.IsNullOrEmpty(ViewBag.searchTerm))
-                        {
-                            var searchTerm = ViewBag.searchTerm as string;
-                            fullName = fullName.Replace(searchTerm, $"<strong>{searchTerm}</strong>", StringComparison.OrdinalIgnoreCase);
-                        }
-                        @Html.Raw(fullName)
-                    }
-                </td>
-=======
-                <td>@i</td>
-                <td>@inst.FullName</td>
->>>>>>> 2138ae456048df4d01452bf4b2520ddbfdd6bc67:ITI.ExamSystem/Views/Instructor/Index.cshtml
+                         if (!string.IsNullOrEmpty(ViewBag.searchTerm))
+                         {
+                             var searchTerm = ViewBag.searchTerm as string; 
+                             fullName = fullName.Replace(searchTerm, $"<strong>{searchTerm}</strong>", StringComparison.OrdinalIgnoreCase); 
+                         } 
+                         @Html.Raw(fullName) 
+                     } 
+                 </td> 
+
+                @* <td>@i</td> *@
+                @* <td>@inst.FullName</td> *@
                 <td>@inst.Email</td>
                 <td>@inst.BranchName</td>
                 <td>
