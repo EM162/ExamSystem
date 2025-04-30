@@ -26,15 +26,6 @@ namespace ITI.ExamSystem.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        //public AccountController(UserManager<ApplicationUser> userManager,
-        //                         SignInManager<ApplicationUser> signInManager,
-        //                         RoleManager<IdentityRole> roleManager)
-        //{
-        //    _userManager = userManager;
-        //    _signInManager = signInManager;
-        //    _roleManager = roleManager;
-        //}
-
         private readonly OnlineExaminationDBContext _db;
         public AccountController(UserManager<ApplicationUser> userManager,
                                  SignInManager<ApplicationUser> signInManager,
