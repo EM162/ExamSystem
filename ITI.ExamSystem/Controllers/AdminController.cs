@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using ITI.ExamSystem.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,15 +11,45 @@ using X.PagedList.Extensions;
 
 namespace ITI.ExamSystem.Controllers
 {
+   // [Route("Admin")]
     public class AdminController : Controller
     {
         private readonly OnlineExaminationDBContext db;
-        private const int AdminBranchID = 1;
+        //private const int AdminBranchID = 1;
 
         public AdminController(OnlineExaminationDBContext _db)
         {
             db = _db;
         }
+
+        private int GetCurrentUserId()
+        {
+            var identityId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(identityId))
+                throw new Exception("User not authenticated");
+
+            var user = db.Users.FirstOrDefault(u => u.IdentityUserId == identityId);
+            if (user == null)
+                throw new Exception("User not found in system");
+
+            return user.UserID;
+        }
+
+
+        private int GetAdminBranchId()
+        {
+            var userId = GetCurrentUserId();
+            var branchId = db.IntakeBranchTrackUsers
+                              .Where(x => x.UserID == userId)
+                              .Select(x => x.BranchID)
+                              .FirstOrDefault();
+
+            if (branchId == 0)
+                throw new InvalidOperationException("Branch not found for current admin.");
+            return branchId;
+        }
+
+
         public IActionResult Dashboard()
         {
             return View();
@@ -142,7 +173,7 @@ namespace ITI.ExamSystem.Controllers
                     db.IntakeBranchTrackUsers.Add(new IntakeBranchTrackUser
                     {
                         UserID = newStudent.UserID,
-                        BranchID = AdminBranchID,
+                        BranchID = GetAdminBranchId(),
                         IntakeID = intakeId,
                         TrackID = trackId
                     });
@@ -158,7 +189,7 @@ namespace ITI.ExamSystem.Controllers
             if (student == null) return NotFound();
 
             var selected = db.IntakeBranchTrackUsers
-                .Where(x => x.UserID == id && x.BranchID == AdminBranchID)
+                .Where(x => x.UserID == id && x.BranchID == GetAdminBranchId())
                 .ToList();
 
             var model = new StudnetViewModel
@@ -276,7 +307,7 @@ namespace ITI.ExamSystem.Controllers
 
             // Re-assign intake/track if needed — make sure they are materialized
             var latestAssignments = db.IntakeBranchTrackUsers
-                .Where(x => x.UserID == id && x.BranchID == AdminBranchID)
+                .Where(x => x.UserID == id && x.BranchID == GetAdminBranchId())
                 .ToList();  // ✅ forces query execution
 
             if (!latestAssignments.Any())
@@ -292,7 +323,7 @@ namespace ITI.ExamSystem.Controllers
                         UserID = id,
                         IntakeID = defaultIntake.IntakeID,
                         TrackID = defaultTrack.TrackID,
-                        BranchID = AdminBranchID
+                        BranchID = GetAdminBranchId()
                     });
                 }
             }
@@ -416,7 +447,7 @@ namespace ITI.ExamSystem.Controllers
                     db.IntakeBranchTrackUsers.Add(new IntakeBranchTrackUser
                     {
                         UserID = instructor.UserID,
-                        BranchID = AdminBranchID,
+                        BranchID = GetAdminBranchId(),
                         IntakeID = intakeId,
                         TrackID = trackId
                     });
@@ -432,7 +463,7 @@ namespace ITI.ExamSystem.Controllers
             if (instructor == null) return NotFound();
 
             var selected = db.IntakeBranchTrackUsers
-                .Where(x => x.UserID == id && x.BranchID == AdminBranchID)
+                .Where(x => x.UserID == id && x.BranchID == GetAdminBranchId())
                 .ToList();
 
             var model = new InstructorViewModel
@@ -503,7 +534,7 @@ namespace ITI.ExamSystem.Controllers
             db.SaveChanges();
 
             var existingAssignments = db.IntakeBranchTrackUsers
-                .Where(x => x.UserID == model.UserID && x.BranchID == AdminBranchID)
+                .Where(x => x.UserID == model.UserID && x.BranchID == GetAdminBranchId())
                 .ToList();
 
             db.IntakeBranchTrackUsers.RemoveRange(existingAssignments);
@@ -516,7 +547,7 @@ namespace ITI.ExamSystem.Controllers
                     db.IntakeBranchTrackUsers.Add(new IntakeBranchTrackUser
                     {
                         UserID = model.UserID,
-                        BranchID = AdminBranchID,
+                        BranchID = GetAdminBranchId(),
                         IntakeID = intakeId,
                         TrackID = trackId
                     });
@@ -604,7 +635,7 @@ namespace ITI.ExamSystem.Controllers
 
             // Re-assign intake/track if needed — make sure they are materialized
             var latestAssignments = db.IntakeBranchTrackUsers
-                .Where(x => x.UserID == id && x.BranchID == AdminBranchID)
+                .Where(x => x.UserID == id && x.BranchID == GetAdminBranchId())
                 .ToList();  // ✅ forces query execution
 
             if (!latestAssignments.Any())
@@ -620,7 +651,7 @@ namespace ITI.ExamSystem.Controllers
                         UserID = id,
                         IntakeID = defaultIntake.IntakeID,
                         TrackID = defaultTrack.TrackID,
-                        BranchID = AdminBranchID
+                        BranchID = GetAdminBranchId()
                     });
                 }
             }

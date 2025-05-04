@@ -41,62 +41,71 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p..." crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="~/ITI.ExamSystem.styles.css" asp-append-version="true" />
 
-    @RenderSection("Styles", required: false)
+    @* <link rel="stylesheet" href="@(Url.Content("~/css/AdminDashboard.css"))" /> *@
 
     </head>
 
 <body>
     <div class="admin-dashboard">
         <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">
-                <h2>Exam <span class="portal">Portal</span></h2>
+        <aside class="sidebar d-flex flex-column justify-content-between">
+            <div>
+                <div class="logo text-center py-3">
+                    <h2>Exam <span class="portal">Portal</span></h2>
+                </div>
+                <ul class="nav flex-column px-3">
+                    <li class="nav-item">
+                        <a class="nav-link @(currentAction == "dashboard" ? "active" : "")" asp-action="Dashboard" asp-controller="Admin">
+                            <i class="fas fa-home me-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(currentAction == "readstudents" ? "active" : "")" asp-action="ReadStudents" asp-controller="Admin">
+                            <i class="fas fa-user-graduate me-2"></i> Students
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(currentAction == "readinstructors" ? "active" : "")" asp-action="ReadInstructors" asp-controller="Admin">
+                            <i class="fas fa-chalkboard-teacher me-2"></i> Instructors
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(currentAction == "readcourses" ? "active" : "")" asp-action="ReadCourses" asp-controller="Admin">
+                            <i class="fas fa-book me-2"></i> Courses
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <ul>
-                <li>
-                    <a class="fas fa-th-large" asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
-                </li>
-                <li>
-                    <a class=" fas fa-th-large" asp-controller="Admin" asp-action="ReadStudents">Students</a>
-                </li>
-                <li>
-                    <a asp-controller="Admin" asp-action="ReadInstructors">Instructors</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" asp-controller="Admin" asp-action="ReadCourses">Courses</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" asp-controller="Admin" asp-action="Questions">Questions</a>
-                </li>
-            </ul>
+            <div class="px-3 pb-3">
+                <a class="nav-link" asp-controller="Account" asp-action="Logout">
+                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                </a>
+            </div>
         </aside>
 
         <!-- Main Content -->
         <div class="flex-grow-1">
             <!-- Header -->
-            <div class="header">
-                <div class="top-right">
-                    <div class="search-bar">
-                        <form asp-controller="Admin" asp-action="@searchAction" method="get" class="d-flex">
-                            <input type="text" name="searchTerm" placeholder="Search..." class="form-control" value="@ViewBag.SearchTerm" />
-                            <button type="submit"><i class="fas fa-search"></i></button>
-                        </form>
+            <header class="header bg-white shadow-sm d-flex justify-content-between align-items-center px-4 py-2">
+                <form asp-controller="Admin" asp-action="@searchAction" method="get" class="d-flex align-items-center w-50">
+                    <input type="text" name="searchTerm" placeholder="Search..." class="form-control me-2" value="@ViewBag.SearchTerm" />
+                    <button type="submit" class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
+                </form>
 
-                        <!-- Clear Search Button -->
-                        @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
-                        {
-                            <a asp-controller="Admin" asp-action="@searchAction" class="btn btn-danger ml-2">
-                                <i class="fas fa-times"></i> Clear Search
-                            </a>
-                        }
+                <div class="d-flex align-items-center">
+                    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+                    {
+                        <a asp-controller="Admin" asp-action="@searchAction" class="btn btn-outline-danger me-3">
+                            <i class="fas fa-times"></i> Clear
+                        </a>
+                    }
+                    <div class="user-profile d-flex align-items-center">
+                        <img src="~/images/user-avatar.jpg" class="rounded-circle me-2" alt="User" width="40" height="40" />
+                        <span class="fw-semibold">John</span>
                     </div>
-                    <div class="user-profile">
-                        <img src="~/images/user-avatar.jpg" alt="User Avatar" />
-                        <span>John</span>
-                    </div>
-
                 </div>
-            </div>
+            </header>
+
 
             <!-- Page Content -->
             <main class="p-4">

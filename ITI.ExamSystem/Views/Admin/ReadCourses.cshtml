@@ -81,3 +81,27 @@
 		</tbody>
 	</table>
 }
+<style>
+	.pagination .page-link {
+		background-color: white; /* dark background */
+		color: #7b61ff; /* white text */
+		border: 1px solid #dee2e6;
+	}
+
+		.pagination .page-link:hover {
+			background-color: #7b61ff; /* slightly lighter on hover */
+			color: #fff;
+		}
+
+	.pagination .page-item.active .page-link {
+		background-color: #7b61ff; /* green for active */
+		border-color: #7b61ff;
+		color: white;
+	}
+
+	.pagination .page-item.disabled .page-link {
+		background-color: white;
+		color: white;
+		pointer-events: none;
+	}
+</style>
