@@ -1,9 +1,7 @@
 ﻿using ITI.ExamSystem.Mapping;
 using ITI.ExamSystem.Models;
 using ITI.ExamSystem.Repository;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace ITI.ExamSystem
 {
@@ -12,19 +10,16 @@ namespace ITI.ExamSystem
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("conn1"))
 
-            );
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<IStudentRepositary, StudentRepositary>();
 
-            builder.Services.AddAutoMapper(typeof(StuduentProfileAutoMapper));
+            // ✅ Read connection string from environment variable
+            var connectionString = Environment.GetEnvironmentVariable("EXAM_DB_CONNECTION");
+            //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-
-
-
+            Console.WriteLine("CONNECTION STRING:");
+            Console.WriteLine(connectionString ?? "🚫 CONNECTION STRING IS NULL");
 
             if (string.IsNullOrWhiteSpace(connectionString))
             {
@@ -33,6 +28,11 @@ namespace ITI.ExamSystem
 
             builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
                 options.UseSqlServer(connectionString));
+
+
+            builder.Services.AddScoped<IStudentRepositary, StudentRepositary>();
+
+            builder.Services.AddAutoMapper(typeof(StuduentProfileAutoMapper));
             builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
             //        builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
             //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -46,7 +46,6 @@ namespace ITI.ExamSystem
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            Console.WriteLine("Using connection: " + builder.Configuration.GetConnectionString("conn1"));
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -61,11 +60,5 @@ namespace ITI.ExamSystem
 
             app.Run();
         }
-
-
-
-
-
-        
     }
 }

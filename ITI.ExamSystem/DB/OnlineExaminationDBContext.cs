@@ -46,8 +46,8 @@ public partial class OnlineExaminationDBContext : DbContext
     public virtual DbSet<UsersExamsQuestion> UsersExamsQuestions { get; set; }
 
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-11179IF;Initial Catalog=OnlineExaminationDB;Integrated Security=True; TrustServerCertificate=True;");
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //    => optionsBuilder.UseSqlServer("Data Source=DESKTOP-11179IF;Initial Catalog=OnlineExaminationDB;Integrated Security=True; TrustServerCertificate=True;");
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
