@@ -59,7 +59,7 @@ namespace ITI.ExamSystem
             builder.Services.AddScoped<IStudentRepositary, StudentRepositary>();
 
             builder.Services.AddAutoMapper(typeof(StuduentProfileAutoMapper));
-           //builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
+            builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
             //        builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
             //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
