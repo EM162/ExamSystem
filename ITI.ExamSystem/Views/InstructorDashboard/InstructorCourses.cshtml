@@ -1,0 +1,98 @@
+﻿@using ITI.ExamSystem.DTOs.InstructorsDTO
+@model List<InstructorCourseDto>
+@{
+    ViewData["Title"] = "InstructorCourses";
+}
+
+@section Styles{
+<link rel="stylesheet" href="~/css/InstructorCourses.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+}
+<div class="content-container">
+     <div class="welcome-section">
+        <div class="container">
+            <div class="row">
+                <h1>COURSES</h1>
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-4">
+                        <div class="card card-margin">
+                        <div class=" no-border text-center">
+                                <img src="~/images/@(!string.IsNullOrEmpty(item.CourseImagePath) ? item.CourseImagePath : "/5ef674cc-c636-4711-a071-397dd4bd334e_php_8175732.png")" alt="Profile Image" style="width:200px" />
+                            </div>
+                        <div class="card-body pt-0">
+                            <div class="widget-49">
+                                <div class="widget-49-title-wrapper">
+                            
+                                    <div class="widget-49-meeting-info">
+                                        <h5 class="widget-49-pro-title ">@item.Name</h5>
+                                
+                                    </div>
+                                </div>
+                                <div class="widget-49-meeting-points row">
+                                    <div class="col-md-6 widget-49-meeting-item">
+                                            <span class="ms-2">Duration</span>
+                                    </div>
+                                    <div class="col-md-6 widget-49-meeting-item">
+                                        <span>@item.Duration Hour</span>
+                                    </div>                          
+                                </div>
+                                <div class="widget-49-meeting-points row">
+                                    <div class="col-md-6 widget-49-meeting-item">
+                                            <span class="ms-2">ExamsCount</span>
+                                    </div>
+                                    <div class="col-md-6 widget-49-meeting-item">
+                                        <span>@item.ExamCount Exam</span>
+                                    </div>
+                                </div>
+                                <div class="widget-49-meeting-points row">
+                                    <div class="col-md-6 widget-49-meeting-item">
+                                            <span class="ms-2">TopicsCount</span>
+                                    </div>
+                                    <div class="col-md-6 widget-49-meeting-item">
+                                        <span>@item.TopicCount Topic</span>
+                                    </div>
+                                </div>
+                                <div class="widget-49-meeting-points row">
+                                    <div class="col-md-6 widget-49-meeting-item">
+                                            <span class="ms-2">StudentsCount</span>
+                                    </div>
+                                    <div class="col-md-6 widget-49-meeting-item">
+                                        <span>@item.StudentCount</span>
+                                    </div>
+                                </div>
+                                <div class="widget-49-meeting-points row">
+                                    <div class="col-md-6 widget-49-meeting-item">
+                                        <span class="ms-2">PubExamCount</span>
+                                    </div>
+                                    <div class="col-md-6 widget-49-meeting-item">
+                                        <span>@item.PublishedExamCount Exams</span>
+                                    </div>
+                                </div>
+                                <div class="widget-49-meeting-points row">
+                                    <div class="col-md-6 widget-49-meeting-item">
+                                        <a asp-action="GetCourseTopics" asp-route-id="@item.CourseID" class="btn btn-info ms-5">Topics</a>
+                                    </div>
+                                    <div class="col-md-6 widget-49-meeting-item">
+                                        <a asp-action="GetCourseStudents" asp-route-id="@item.CourseID" class="btn btn-primary">Students</a>
+                                    </div>
+                                </div>
+                                <div class="widget-49-meeting-points row">
+                                    <div class="col-md-6 widget-49-meeting-item">
+                                          <a asp-action="GetCourseExams" asp-route-id="@item.CourseID" class="btn btn-warning ms-5">Exams</a>
+                                    </div>
+                                    <div class="col-md-6 widget-49-meeting-item">
+                                            <a asp-action="GetCoursePublishedExams" asp-route-id="@item.CourseID" class="btn btn-success">PubExams</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               }
+            </div>
+        </div>
+     </div> 
+</div> 

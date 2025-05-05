@@ -30,6 +30,8 @@ namespace ITI.ExamSystem
             //if (myconnectionString == null)
             //    throw new InvalidOperationException("No connection string found for EXAM_DB_CONNECTION or DefaultConnection.");
 
+            builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
+                options.UseSqlServer(connectionString));
 
 
             builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
@@ -57,7 +59,7 @@ namespace ITI.ExamSystem
             builder.Services.AddScoped<IStudentRepositary, StudentRepositary>();
 
             builder.Services.AddAutoMapper(typeof(StuduentProfileAutoMapper));
-           //builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
+            builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
             //        builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
             //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
