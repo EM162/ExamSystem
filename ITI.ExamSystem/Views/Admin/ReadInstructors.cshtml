@@ -1,0 +1,132 @@
+﻿@model ITI.ExamSystem.Models.InstructorIndexViewModel
+@{
+    ViewData["Title"] = "Instructors";
+    var i = (Model.CurrentPage - 1) * 10 + 1;
+}
+<div class="content-container">
+    <div class="welcome-section">
+        <a asp-action="CreateInstructor" class="createInst">Add Instructor</a>
+
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Branch</th>
+                    <th>Tracks</th>
+                    <th>Intakes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var inst in Model.Instructors)
+                {
+                    <tr>
+                        <td>@inst.UserID</td>
+                        <td>
+                            @{
+                                var fullName = inst.FullName;
+                                if (!string.IsNullOrEmpty(ViewBag.searchTerm))
+                                {
+                                    var searchTerm = ViewBag.searchTerm as string;
+                                    fullName = fullName.Replace(searchTerm, $"<strong>{searchTerm}</strong>", StringComparison.OrdinalIgnoreCase);
+                                }
+                                @Html.Raw(fullName)
+                            }
+                        </td>
+                        <td>@inst.Email</td>
+                        <td>@inst.BranchName</td>
+                        <td>
+                            @foreach (var track in inst.Tracks.Split(","))
+                            {
+                                <div>@track.Trim()</div>
+                            }
+                        </td>
+                        <td>
+                            @foreach (var intake in inst.Intakes.Split(","))
+                            {
+                                <div>@intake.Trim()</div>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="EditInstructor" asp-route-id="@inst.UserID" class="btn  btn-md">📝</a>
+                            <a asp-action="DeleteInstructor" asp-route-id="@inst.UserID" class="btn btn-sm">❌</a>
+                        </td>
+                    </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <nav aria-label="Instructor pagination">
+            <ul class="pagination justify-content-center">
+                @for (int page = 1; page <= Model.TotalPages; page++)
+                {
+                    <li class="page-item @(page == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-action="ReadInstructors" asp-route-page="@(page)" asp-route-searchTerm="@ViewBag.searchTerm">@(page)</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+</div>
+<!-- Deleted Instructors -->
+@if (Model.DeletedInstructors.Any())
+{
+    <h4 class="mt-5">Inactive Instructors</h4>
+    <table class="table table-bordered table-striped">
+        <thead class="table-secondary">
+            <tr>
+                <th>#</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int j = 1;
+                foreach (var item in Model.DeletedInstructors)
+                {
+                    <tr>
+                        <td>@j</td>
+                        <td>@item.FullName</td>
+                        <td>@item.Email</td>
+                        <td>
+                            <form asp-action="ReactivateInstructor" asp-route-id="@item.UserID" method="post" style="display:inline">
+                                <button type="submit" class="btn btn-success btn-sm">Reactivate</button>
+                            </form>
+                        </td>
+                    </tr>
+                    j++;
+                }
+            }
+        </tbody>
+    </table>
+}
+<style>
+    .pagination .page-link {
+        background-color: white; /* dark background */
+        color: #7b61ff; /* white text */
+        border: 1px solid #dee2e6;
+    }
+
+        .pagination .page-link:hover {
+            background-color: #7b61ff; /* slightly lighter on hover */
+            color: #fff;
+        }
+
+    .pagination .page-item.active .page-link {
+        background-color: #7b61ff; /* green for active */
+        border-color: #7b61ff;
+        color: white;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        background-color: white;
+        color: white;
+        pointer-events: none;
+    }
+</style>

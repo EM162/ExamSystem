@@ -8,11 +8,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ITI.ExamSystem.Models;
 
+
 [Index("Email", Name = "UQ__Users__A9D10534146454C2", IsUnique = true)]
 public partial class User
 {
     [Key]
     public int UserID { get; set; }
+
+    public string IdentityUserId { get; set; }
 
     [Required]
     [StringLength(100)]
@@ -21,8 +24,9 @@ public partial class User
     [Required]
     
     [StringLength(100)]
+    [EmailAddress]
     [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
-        ErrorMessage = "Invalid email address format.")]
+        ErrorMessage = "Invalid email address format.")]
     public string Email { get; set; }
 
     [Required]

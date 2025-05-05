@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Create Instructor";
+	Layout = "_Layout"; // Use the custom admin layout
 }
 
 <h2>Create Instructor</h2>
@@ -50,7 +51,7 @@
         }
     </div>
     <button type="submit" class="btn btn-primary">Create</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    <a asp-action="IndexInst" class="btn btn-secondary">Cancel</a>
 </form>
 
 @section Scripts {

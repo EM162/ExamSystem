@@ -1,6 +1,7 @@
 ﻿using ITI.ExamSystem.Mapping;
 using ITI.ExamSystem.Models;
 using ITI.ExamSystem.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITI.ExamSystem
@@ -11,12 +12,8 @@ namespace ITI.ExamSystem
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-
-            // ✅ Read connection string from environment variable
+             //✅ Read connection string from environment variable
             var connectionString = Environment.GetEnvironmentVariable("EXAM_DB_CONNECTION");
-            //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
             Console.WriteLine("CONNECTION STRING:");
             Console.WriteLine(connectionString ?? "🚫 CONNECTION STRING IS NULL");
@@ -26,16 +23,46 @@ namespace ITI.ExamSystem
                 throw new InvalidOperationException("❌ Environment variable EXAM_DB_CONNECTION is not set.");
             }
 
+            ///TEMPERORARRY
+            //var myconnectionString = Environment.GetEnvironmentVariable("EXAM_DB_CONNECTION") ??
+            //           builder.Configuration.GetConnectionString("DefaultConnection");
+
+            //if (myconnectionString == null)
+            //    throw new InvalidOperationException("No connection string found for EXAM_DB_CONNECTION or DefaultConnection.");
+
             builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
                 options.UseSqlServer(connectionString));
+
+
+            builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
+                options.UseSqlServer(connectionString));
+
+            //Idenity Services
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 4;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            }).AddEntityFrameworkStores<OnlineExaminationDBContext>()
+            .AddDefaultTokenProviders();
+
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.User.AllowedUserNameCharacters = null;
+            });
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+
 
 
             builder.Services.AddScoped<IStudentRepositary, StudentRepositary>();
 
             builder.Services.AddAutoMapper(typeof(StuduentProfileAutoMapper));
-            builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
+           //builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
             //        builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
             //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
             var app = builder.Build();
 
@@ -52,11 +79,12 @@ namespace ITI.ExamSystem
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Login}/{id?}");
 
             app.Run();
         }

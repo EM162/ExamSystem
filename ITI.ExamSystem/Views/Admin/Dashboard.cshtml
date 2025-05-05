@@ -4,30 +4,6 @@
 	Layout = "_Layout"; // Use the custom admin layout
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <title>Admin Dashboard</title>
-
-    <!-- FontAwesome for social icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p..." crossorigin="anonymous" referrerpolicy="no-referrer"/>
-
-    <!-- Your custom CSS -->
-    <link rel="stylesheet" href="@(Url.Content("~/css/AdminDashboard.css"))?v=1" />
-
-
-
-
-</head>
-<body>
-    @{
-        ViewData["Title"] = "Admin Dashboard";
-    }
-
-@* <!-- Include the Admin Sidebar Partial View --> *@
-@*     @Html.Partial("_AdminSidebar") *@
-
 <!-- Main Content -->
 <div class="admin-dashboard">
     <div class="content-container">
@@ -129,4 +105,3 @@
     });
 </script>
 
-</body>

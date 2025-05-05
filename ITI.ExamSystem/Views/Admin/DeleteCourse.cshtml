@@ -1,0 +1,17 @@
+﻿@model ITI.ExamSystem.Models.Course
+@{
+    ViewData["Title"] = "DeleteCourse";
+}
+
+<h1>Delete Course</h1>
+<p>Are you sure you want to delete this Course?</p>
+
+<div>
+    <h4>@Model.Name</h4>
+    <p>@Model.Duration</p>
+
+    <form asp-action="DeleteCourse" asp-route-id="@Model.CourseID" method="post">
+        <input type="submit" value="Confirm Delete" class="btn btn-danger" />
+        <a asp-action="ReadCourses" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
