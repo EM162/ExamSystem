@@ -1,0 +1,48 @@
+﻿@model ITI.ExamSystem.Models.Exam
+
+@{
+    ViewData["Title"] = "Exam Questions";
+}
+
+<h2>Exam Questions: @ViewBag.ExamTitle</h2>
+
+<a asp-action="GetInstructorCreatedExams" class="btn btn-secondary mb-3">
+    &larr; Back to Exams
+</a>
+
+
+@if (Model.Questions == null || !Model.Questions.Any())
+{
+    <div class="alert alert-info">No questions have been added to this exam yet.</div>
+}
+else
+{
+    <div class="list-group">
+        @foreach (var question in Model.Questions)
+        {
+            <div class="list-group-item mb-3">
+                <h5 style="color: rebeccapurple; font-weight:bold">@question.QuestionText</h5>
+
+                @if (question.QuestionChoices != null && question.QuestionChoices.Any())
+                {
+                    <ul>
+                        @foreach (var choice in question.QuestionChoices.OrderBy(c => c.ChoiceOrder))
+                        {
+                            <li>
+                                @choice.ChoiceText
+                                @if (choice.CorrectChoice == 1)
+                                {
+                                    <strong style="color:green">(Correct)</strong>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p><em>No choices available (might be a T/F question or incomplete).</em></p>
+                }
+            </div>
+        }
+    </div>
+}

@@ -21,7 +21,7 @@ public partial class PublishedExam
 
     public int IntakeID { get; set; }
 
-    public int CourseID { get; set; }
+    public int? CourseID { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? PublishDate { get; set; }

@@ -1,0 +1,47 @@
+﻿@model ITI.ExamSystem.Models.PublishedExam
+
+@{
+    ViewData["Title"] = "Publish Exam";
+}
+
+<h2>Publish Exam: @ViewBag.ExamTitle</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<form asp-action="PublishExam" method="post">
+    <input type="hidden" asp-for="ExamID" />
+    <input type="hidden" asp-for="CourseID" />
+
+    <div class="mb-3">
+        <label asp-for="BranchID" class="form-label">Select Branch</label>
+        <select asp-for="BranchID" class="form-control" asp-items="ViewBag.Branches">
+            <option value="">-- Select Branch --</option>
+        </select>
+        <span asp-validation-for="BranchID" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TrackID" class="form-label">Select Track</label>
+        <select asp-for="TrackID" class="form-control" asp-items="ViewBag.Tracks">
+            <option value="">-- Select Track --</option>
+        </select>
+        <span asp-validation-for="TrackID" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="IntakeID" class="form-label">Select Intake</label>
+        <select asp-for="IntakeID" class="form-control" asp-items="ViewBag.Intakes">
+            <option value="">-- Select Intake --</option>
+        </select>
+        <span asp-validation-for="IntakeID" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Publish</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

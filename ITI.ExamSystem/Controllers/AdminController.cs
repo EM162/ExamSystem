@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using ITI.ExamSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,12 +12,10 @@ using X.PagedList.Extensions;
 
 namespace ITI.ExamSystem.Controllers
 {
-   // [Route("Admin")]
+    //[Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly OnlineExaminationDBContext db;
-        //private const int AdminBranchID = 1;
-
         public AdminController(OnlineExaminationDBContext _db)
         {
             db = _db;
@@ -334,6 +333,7 @@ namespace ITI.ExamSystem.Controllers
         }
 
         //Instructors
+
         public IActionResult ReadInstructors(int page = 1, int pageSize = 7)
         {
             var instructorRoleId = db.Roles.FirstOrDefault(r => r.RoleName == "Instructor")?.RoleID;

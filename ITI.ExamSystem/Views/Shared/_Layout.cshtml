@@ -1,30 +1,35 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString()?.ToLower();
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString()?.ToLower();
 
-    string searchAction = "Dashboard"; // Default action
+    string searchAction = "Dashboard";
 
-    if (currentAction == "readinstructors") // Fully lowercase
+    if (currentAction == "readinstructors")
     {
         searchAction = "SearchInstructors";
     }
-    else if (currentAction == "courses") // Fully lowercase
+    else if (currentAction == "courses")
     {
         searchAction = "SearchCourses";
     }
-    else if (currentAction == "questions") // Fully lowercase
+    else if (currentAction == "questions")
     {
         searchAction = "SearchQuestions";
     }
-    else if (currentAction == "readstudents") // Fully lowercase
+    else if (currentAction == "readstudents")
     {
         searchAction = "SearchStudents";
     }
-    else if (currentAction == "dashboard") // Fully lowercase
+    else if (currentAction == "dashboard")
     {
         searchAction = "Dashboard";
     }
+    var userIsAdmin = User.IsInRole("Admin");
+    var userIsStudent = User.IsInRole("Student");
+    var userIsInstructor = User.IsInRole("Instructor");
 }
+
 
 
 <!DOCTYPE html>
@@ -42,6 +47,7 @@
     <link rel="stylesheet" href="~/ITI.ExamSystem.styles.css" asp-append-version="true" />
 
     @* <link rel="stylesheet" href="@(Url.Content("~/css/AdminDashboard.css"))" /> *@
+    @await RenderSectionAsync("Styles", required: false)
 
     </head>
 
@@ -53,28 +59,139 @@
                 <div class="logo text-center py-3">
                     <h2>Exam <span class="portal">Portal</span></h2>
                 </div>
-                <ul class="nav flex-column px-3">
-                    <li class="nav-item">
-                        <a class="nav-link @(currentAction == "dashboard" ? "active" : "")" asp-action="Dashboard" asp-controller="Admin">
-                            <i class="fas fa-home me-2"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(currentAction == "readstudents" ? "active" : "")" asp-action="ReadStudents" asp-controller="Admin">
-                            <i class="fas fa-user-graduate me-2"></i> Students
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(currentAction == "readinstructors" ? "active" : "")" asp-action="ReadInstructors" asp-controller="Admin">
-                            <i class="fas fa-chalkboard-teacher me-2"></i> Instructors
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(currentAction == "readcourses" ? "active" : "")" asp-action="ReadCourses" asp-controller="Admin">
-                            <i class="fas fa-book me-2"></i> Courses
-                        </a>
-                    </li>
-                </ul>
+                @if (userIsAdmin)
+                {
+                    <ul class="nav flex-column px-3">
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "dashboard" ? "active" : "")" asp-action="Dashboard" asp-controller="Admin">
+                                <i class="fas fa-home me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "readstudents" ? "active" : "")" asp-action="ReadStudents" asp-controller="Admin">
+                                <i class="fas fa-user-graduate me-2"></i> Students
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "readinstructors" ? "active" : "")" asp-action="ReadInstructors" asp-controller="Admin">
+                                <i class="fas fa-chalkboard-teacher me-2"></i> Instructors
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "readcourses" ? "active" : "")" asp-action="ReadCourses" asp-controller="Admin">
+                                <i class="fas fa-book me-2"></i> Courses
+                            </a>
+                        </li>
+                    </ul>
+                }
+
+                @if (userIsStudent)
+                {
+                    <ul class="nav flex-column px-3">
+                        <!-- My Courses -->
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "studentcourse" ? "active" : "")"
+                               asp-action="StudentCourse"
+                               asp-controller="Course"
+                               asp-route-studentId="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value">
+                                <i class="fas fa-book me-2"></i> My Courses
+                            </a>
+                        </li>
+
+                        <!-- My Profile -->
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "profile" ? "active" : "")"
+                               asp-action="Profile"
+                               asp-controller="StudentProfile"
+                               asp-route-id="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value">
+                                <i class="fas fa-user me-2"></i> My Profile
+                            </a>
+                        </li>
+
+                        <!-- Upload Course Image -->
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "createimage" ? "active" : "")"
+                               asp-action="CreateImage"
+                               asp-controller="Course">
+                                <i class="fas fa-upload me-2"></i> Upload Course Image
+                            </a>
+                        </li>
+
+                        <!-- My Exams (assuming your exams controller/view still uses Student_Exams) -->
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "exams" ? "active" : "")"
+                               asp-action="Exams"
+                               asp-controller="Student_Exams">
+                                <i class="fas fa-file-alt me-2"></i> My Exams
+                            </a>
+                        </li>
+
+                    </ul>
+                }
+
+
+                @if (userIsInstructor)
+                {
+                    <ul class="nav flex-column px-3">
+                        <!-- Dashboard -->
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "index" ? "active" : "")"
+                               asp-action="Index"
+                               asp-controller="InstructorDashboard">
+                                <i class="fas fa-home me-2"></i> Dashboard
+                            </a>
+                        </li>
+
+                        <!-- My Profile -->
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "instructorprofile" ? "active" : "")"
+                               asp-action="InstructorProfile"
+                               asp-controller="InstructorDashboard">
+                                <i class="fas fa-user me-2"></i> My Profile
+                            </a>
+                        </li>
+
+                        <!-- My Courses -->
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "instructorcourses" ? "active" : "")"
+                               asp-action="InstructorCourses"
+                               asp-controller="InstructorDashboard">
+                                <i class="fas fa-book me-2"></i> My Courses
+                            </a>
+                        </li>
+
+                        <!-- My Students -->
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "getinstructorstudents" ? "active" : "")"
+                               asp-action="GetInstructorStudents"
+                               asp-controller="InstructorDashboard">
+                                <i class="fas fa-user-graduate me-2"></i> My Students
+                            </a>
+                        </li>
+
+                        <!-- Created Exams -->
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "getinstructorcreatedexams" ? "active" : "")"
+                               asp-action="GetInstructorCreatedExams"
+                               asp-controller="InstructorDashboard">
+                                <i class="fas fa-file-alt me-2"></i> Created Exams
+                            </a>
+                        </li>
+
+                        <!-- Published Exams -->
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "getinstructorpublishedexams" ? "active" : "")"
+                               asp-action="GetInstructorPublishedExams"
+                               asp-controller="InstructorDashboard">
+                                <i class="fas fa-bullhorn me-2"></i> Published Exams
+                            </a>
+                        </li>
+                    </ul>
+                }
+
+
+
+
             </div>
             <div class="px-3 pb-3">
                 <a class="nav-link" asp-controller="Account" asp-action="Logout">
@@ -99,9 +216,18 @@
                             <i class="fas fa-times"></i> Clear
                         </a>
                     }
-                    <div class="user-profile d-flex align-items-center">
-                        <img src="~/images/user-avatar.jpg" class="rounded-circle me-2" alt="User" width="40" height="40" />
-                        <span class="fw-semibold">John</span>
+                    <div class="user-role text-end">
+                        @{
+                            var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+                        }
+                        @if (!string.IsNullOrEmpty(userRole))
+                        {
+                            <span class="fw-semibold">Welcome @userRole</span>
+                        }
+                        else
+                        {
+                            <span class="fw-semibold">Welcome</span>
+                        }
                     </div>
                 </div>
             </header>

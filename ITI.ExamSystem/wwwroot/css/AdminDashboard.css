@@ -117,11 +117,13 @@ body {
         font-size: 20px;
     }
 
-.nav-link:hover,
-.nav-link:active {
-    background-color: #fff;
-                border-radius: 20px;
-            }
+    .nav-link:hover,
+    .nav-link:active {
+        background-color: white;
+        color:black;
+/*        cursor:*/
+        border-radius: 20px;
+    }
         /*.sidebar nav ul {
     list-style: none;
     padding: 0;

@@ -83,9 +83,26 @@ namespace ITI.ExamSystem.Controllers
                         ExpiresUtc = DateTime.UtcNow.AddHours(6)
                     });
 
-                //redirect role base condition//
+                ////redirect role base condition//
 
 
+                //if (roles.Contains("Admin"))
+                //{
+                //    return RedirectToAction("Dashboard", "Admin");
+                //}
+                //else if (roles.Contains("Instructor"))
+                //{
+                //    return RedirectToAction("Index", "InstructorDashboard");
+                //}
+                //else if (roles.Contains("Student"))
+                //{
+                //    return RedirectToAction("StudentCourse", "Course", new { studentID = user.Id });
+                //}
+                //else
+                //{
+                //    // fallback if role is unexpected
+                //    return RedirectToAction("Index", "Home");
+                //}
                 return RedirectToAction("Index", "Home");
             }
 
