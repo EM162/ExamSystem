@@ -1,6 +1,7 @@
 ﻿using ITI.ExamSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace ITI.ExamSystem.Controllers
 {
@@ -11,10 +12,23 @@ namespace ITI.ExamSystem.Controllers
         {
             _db = db;
         }
+        private int GetCurrentUserId()
+        {
+            var identityId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(identityId))
+                throw new Exception("User not authenticated");
+
+            var user = _db.Users.FirstOrDefault(u => u.IdentityUserId == identityId);
+            if (user == null)
+                throw new Exception("User not found in system");
+
+            return user.UserID;
+        }
+
 
         public IActionResult Exams()
         {
-            int studentId = 2;
+            int studentId = GetCurrentUserId();
             var now = DateTime.Now;
 
             // Get tracks/intakes of the student
@@ -67,7 +81,7 @@ namespace ITI.ExamSystem.Controllers
 
         public IActionResult ExamDetails(int examId)
         {
-            int studentId = 2; // OR use a passed parameter
+            int studentId = GetCurrentUserId();
 
             var exam = _db.Exams
                 .Include(e => e.Course)

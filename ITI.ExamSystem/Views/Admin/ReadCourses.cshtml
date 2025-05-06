@@ -1,0 +1,107 @@
+﻿@model ITI.ExamSystem.Models.CourseIndexViewModel
+@using X.PagedList.Mvc.Core;
+@{
+    ViewData["Title"] = "ReadCourses";
+	Layout = "_Layout"; // Use the custom admin layout
+}
+<div class="content-container">
+	<div class="welcome-section">
+		<a asp-action="CreateCourse" class="createStudent">Add New Course</a>
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Course Name</th>
+					<th>Duration</th>
+					<th>Tracks</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var course in Model.Courses)
+				{
+					<tr>
+						<td>@course.CourseID</td>
+						<td>@course.Name</td>
+						<td>@course.Duration</td>
+						<td>
+							@foreach (var track in course.SelectedTrackIDs)
+							{
+								var trackName = course.AvailableTracks.FirstOrDefault(t => t.TrackID == track)?.TrackName;
+								<div>@trackName</div>
+							}
+						<td>
+							<a asp-action="EditCourse" asp-route-id="@course.CourseID" class="btn  btn-md">📝</a>
+							<a asp-action="DeleteCourse" asp-route-id="@course.CourseID" class="btn btn-sm">❌</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+		<!-- Pagination -->
+		<nav aria-label="Courses pagination">
+			<ul class="pagination justify-content-center">
+				@for (int page = 1; page <= Model.TotalPages; page++)
+				{
+					<li class="page-item @(page == Model.CurrentPage ? "active" : "")">
+						<a class="page-link" asp-action="SearchCourses" asp-route-page="@(page)" asp-route-searchTerm="@ViewBag.searchTerm">@(page)</a>
+					</li>
+				}
+			</ul>
+		</nav>
+	</div>
+	</div>
+<!-- Deleted Courses -->
+@if (Model.DeletedCourses != null && Model.DeletedCourses.Any())
+{
+	<h4 class="mt-5">Inactive Courses</h4>
+	<table class="table table-bordered table-striped">
+		<thead class="table-secondary">
+			<tr>
+				<th>#</th>
+				<th>Course Name</th>
+				<th>Duration</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.DeletedCourses)
+			{
+				<tr>
+					<td>@item.CourseID</td>
+					<td>@item.Name</td>
+					<td>@item.Duration</td>
+					<td>
+						<form asp-action="ReactivateCourse" asp-route-id="@item.CourseID" method="post" style="display:inline">
+							<button type="submit" class="btn btn-success btn-sm">Reactivate</button>
+						</form>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+<style>
+	.pagination .page-link {
+		background-color: white; /* dark background */
+		color: #7b61ff; /* white text */
+		border: 1px solid #dee2e6;
+	}
+
+		.pagination .page-link:hover {
+			background-color: #7b61ff; /* slightly lighter on hover */
+			color: #fff;
+		}
+
+	.pagination .page-item.active .page-link {
+		background-color: #7b61ff; /* green for active */
+		border-color: #7b61ff;
+		color: white;
+	}
+
+	.pagination .page-item.disabled .page-link {
+		background-color: white;
+		color: white;
+		pointer-events: none;
+	}
+</style>

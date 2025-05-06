@@ -1,0 +1,64 @@
+﻿@model ITI.ExamSystem.Models.Question
+
+@{
+    ViewData["Title"] = "Add Questions";
+}
+
+<h2>Add Questions to Exam: @ViewBag.ExamTitle</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<form asp-action="AddQuestions" asp-route-examId="@ViewBag.ExamId" method="post">
+    <div class="mb-3">
+        <label asp-for="QuestionText" class="form-label"></label>
+        <input asp-for="QuestionText" class="form-control" />
+        <span asp-validation-for="QuestionText" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="QuestionType" class="form-label"></label>
+        <select asp-for="QuestionType" class="form-control">
+            <option value="">Select Type</option>
+            <option value="MCQ">MCQ</option>
+            <option value="TrueFalse">True/False</option>
+        </select>
+        <span asp-validation-for="QuestionType" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Grade" class="form-label"></label>
+        <input asp-for="Grade" class="form-control" />
+        <span asp-validation-for="Grade" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="TopicID" class="form-label">Select Topic</label>
+        <select asp-for="TopicID" class="form-control" asp-items="ViewBag.Topics">
+            <option value="">-- Select Topic --</option>
+        </select>
+        <span asp-validation-for="TopicID" class="text-danger"></span>
+    </div>
+
+
+    <!-- Choices for MCQ -->
+    <div class="mb-3">
+        <label class="form-label">Choices (for MCQ)</label>
+        <input name="Choices[0]" class="form-control mb-2" placeholder="Choice 1" />
+        <input name="Choices[1]" class="form-control mb-2" placeholder="Choice 2" />
+        <input name="Choices[2]" class="form-control mb-2" placeholder="Choice 3" />
+        <input name="Choices[3]" class="form-control mb-2" placeholder="Choice 4" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Correct Choice (1-4 for MCQ or 1=True / 0=False)</label>
+        <input name="CorrectChoice" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Question</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

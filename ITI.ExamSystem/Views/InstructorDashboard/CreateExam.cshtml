@@ -1,0 +1,53 @@
+﻿@model ITI.ExamSystem.Models.Exam
+
+@{
+    ViewData["Title"] = "Create Exam";
+}
+
+<h2>Create New Exam</h2>
+
+<form asp-action="CreateExam" method="post">
+    <div class="mb-3">
+        <label asp-for="ExamType" class="form-label"></label>
+        <input asp-for="ExamType" class="form-control" />
+        <span asp-validation-for="ExamType" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ExamDate" class="form-label"></label>
+        <input asp-for="ExamDate" class="form-control" type="datetime-local" />
+        <span asp-validation-for="ExamDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MCQQuestionCount" class="form-label"></label>
+        <input asp-for="MCQQuestionCount" class="form-control" />
+        <span asp-validation-for="MCQQuestionCount" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TrueFalseQuestionCount" class="form-label"></label>
+        <input asp-for="TrueFalseQuestionCount" class="form-control" />
+        <span asp-validation-for="TrueFalseQuestionCount" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Duration" class="form-label"></label>
+        <input asp-for="Duration" class="form-control" />
+        <span asp-validation-for="Duration" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Course</label>
+        <select asp-for="CourseID" class="form-control" asp-items="ViewBag.Courses">
+            <option value="">Select Course</option>
+        </select>
+        <span asp-validation-for="CourseID" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

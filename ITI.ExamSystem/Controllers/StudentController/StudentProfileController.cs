@@ -20,23 +20,16 @@ namespace ITI.ExamSystem.Controllers.StudentController
         this.userRepositary = _userRepositary;
          this._map= _map;
             this.db = _db;
-
-        
         }
-
 
         public IActionResult Index()
         {
             return View();
         }
-        // localhost/api/StudentProfile/3
+
         [HttpGet("{id}")]
-        public IActionResult Profile(int id)
+        public IActionResult Profile(Guid id)
         {
-
-
-            //int studentid = 3;   //change depend login
-
             var _student = userRepositary.GetStudentProfile(id);
             if (_student == null)
             {
@@ -48,11 +41,8 @@ namespace ITI.ExamSystem.Controllers.StudentController
             return View("~/Views/Student/studentProfile.cshtml", dto);
         }
 
-        // upload images for test
-       
-      
         [HttpPost]
-        public async Task<IActionResult> UploadProfileImage(IFormFile imageFile, int studentId)
+        public async Task<IActionResult> UploadProfileImage(IFormFile imageFile, Guid studentId)
         {
             if (imageFile != null && imageFile.Length > 0)
             {
@@ -80,15 +70,7 @@ namespace ITI.ExamSystem.Controllers.StudentController
                 student.ProfileImagePath = "/images/" + fileName;
                 db.SaveChanges();
             }
-
             return RedirectToAction("Profile", new { id = studentId });
         }
-
-
-
-
-       
-
-
     }
 }

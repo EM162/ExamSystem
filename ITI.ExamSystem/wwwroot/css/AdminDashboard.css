@@ -8,23 +8,22 @@ body {
 
 /* Adjust Main Content for Header and Sidebar */
 .admin-dashboard {
-    margin-top: 60px; /* Match the header height */
-    margin-left: 250px; /* Match the sidebar width */
+    margin-top: 50px; /* Match the header height */
+    margin-left: 220px; /* Match the sidebar width */
     display: flex;
     gap: 20px;
     padding: 20px;
     transition: margin 0.3s ease;
 }
-
-.content-container {
-    position: relative;
-    border-radius: 8px;
-    max-width: 1200px;
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
+    .content-container {
+        position: relative;
+        border-radius: 8px;
+        max-width: 1200px;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
 /* Header Styles */
 .header {
     display: flex;
@@ -36,7 +35,7 @@ body {
     position: fixed;
     top: 0;
     right: 0;
-    left: 230px; /* Match the sidebar width */
+    left: 250px; /* Match the sidebar width */
     z-index: 1000;
     transition: left 0.3s ease;
 }
@@ -104,8 +103,28 @@ body {
     font-weight: bold;
     color: #fff;
 }
+.nav-link {
+    text-decoration: none;
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+}
 
-.sidebar nav ul {
+    .nav-link i {
+        margin-right: 10px;
+        font-size: 20px;
+    }
+
+    .nav-link:hover,
+    .nav-link:active {
+        background-color: white;
+        color:black;
+/*        cursor:*/
+        border-radius: 20px;
+    }
+        /*.sidebar nav ul {
     list-style: none;
     padding: 0;
     margin: 20px 0 0 0;
@@ -126,15 +145,15 @@ body {
 
             .sidebar nav ul li a:hover,
             .sidebar nav ul li a.active {
-                background-color: #fff; /* Darker purple on hover or active */
-                color: black;
+                background-color: #fff;*/ /* Darker purple on hover or active */
+    /*color: black;
                 border-radius: 20px;
             }
 
         .sidebar nav ul li i {
             margin-right: 10px;
-        }
-.welcome-section {
+        }*/
+    .welcome-section {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -336,6 +355,18 @@ body {
         background-color: #f1f1f1;
     }
 .createStudent {
+    top: 20px;
+    right: 20px;
+    background-color: #7b61ff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #fff;
+    margin-bottom: 20px;
+    flex: 1 1 calc(25% - 20px);
+    text-decoration: none;
+}
+.createInst {
     top: 20px;
     right: 20px;
     background-color: #7b61ff;

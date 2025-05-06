@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Login";
+	Layout = null; // No layout for this page
 }
 
 
@@ -36,14 +37,14 @@
       <!-- removed the h1 from here -->
       <p class="subtitle">Login to your account</p>
 
-      <div class="social-login">
-        <span>Login with</span>
-        <div class="icons">
-          <i class="fab fa-facebook-f"></i>
-          <i class="fab fa-google"></i>
-          <i class="fab fa-linkedin-in"></i>
-        </div>
-      </div>
+      @* <div class="social-login"> *@
+      @*   <span>Login with</span> *@
+      @*   <div class="icons"> *@
+      @*     <i class="fab fa-facebook-f"></i> *@
+      @*     <i class="fab fa-google"></i> *@
+      @*     <i class="fab fa-linkedin-in"></i> *@
+      @*   </div> *@
+      @* </div> *@
 
         <partial name="_ValidationScriptsPartial" />
         <form asp-action="Login" asp-controller="Account" method="post" class="login-form">
@@ -63,12 +64,8 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
-            <div class="form-group form-check">
-                <input asp-for="RememberMe" class="form-check-input" />
-                <label asp-for="RememberMe" class="form-check-label"></label>
-            </div>
 
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn-login">Login</button>
         </form>
 
     </div>

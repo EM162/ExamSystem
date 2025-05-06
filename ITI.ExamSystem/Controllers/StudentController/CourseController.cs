@@ -5,11 +5,12 @@ using ITI.ExamSystem.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ITI.ExamSystem.Controllers.StudentController
 {
 
-    
+    [Route("student/course")]
     public class CourseController : Controller
     {
         private IStudentRepositary stdRepositary;
@@ -24,9 +25,9 @@ namespace ITI.ExamSystem.Controllers.StudentController
             this._env = env ;    
         }
 
-        [HttpGet("student/course/{studentID}")]
-
-        public async Task< IActionResult> StudentCourse(int studentID)
+        // GET: /student/course/{studentID}
+        [HttpGet("{studentID:guid}")]
+        public async Task< IActionResult> StudentCourse(Guid studentID)
         
         {
             if (studentID == null) return BadRequest();
@@ -40,11 +41,10 @@ namespace ITI.ExamSystem.Controllers.StudentController
             }
 
             return View("~/Views/Student/StudentCourse.cshtml", courseDto);
-
         }
 
-
-        [HttpGet("student/topics/{courseID}")]
+        // GET: /student/course/{courseID}/topics
+        [HttpGet("{courseID:guid}/topics")]
         public async Task<IActionResult> MyTopics (int courseID)
         {
             if(courseID == null) return BadRequest();
@@ -54,61 +54,17 @@ namespace ITI.ExamSystem.Controllers.StudentController
 
         }
 
-
-        // upload images 
-
-
-        [HttpGet("/course/createImage")]
+        // GET: /student/course/image/create
+        [HttpGet("image/create")]
         public IActionResult CreateImage()
         {
             var courses = db.Courses.Select(c => new { c.CourseID, c.Name }).ToList();
             ViewBag.Courses = new SelectList(courses, "CourseID", "Name");
             return View();
         }
-        /*
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-      
-        public async Task<IActionResult> CreateImage(int CourseID, IFormFile ImageFile)
-        {
-            var course = await db.Courses.FindAsync(CourseID);
-            if (course == null)
-            {
-       
-                ViewBag.Courses = new SelectList(db.Courses.ToList(), "Id", "Name");
-                return View();
-            }
-            if (ModelState.IsValid)
-            {
-                if (ImageFile != null && ImageFile.Length > 0)
-                {
-                    string uploadDir = Path.Combine(_env.WebRootPath, "images");
-                    if (!Directory.Exists(uploadDir))
-                        Directory.CreateDirectory(uploadDir);
 
-                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(ImageFile.FileName);
-                    string filePath = Path.Combine(uploadDir, uniqueFileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await ImageFile.CopyToAsync(stream);
-                    }
-
-                   
-                    course.CourseImagePath = "/images/" + uniqueFileName;
-                }
-
-              
-                await db.SaveChangesAsync();
-                return RedirectToAction("CreateImage");
-            }
-            ViewBag.Courses = new SelectList(db.Courses.ToList(), "CourseID", "Name");
-            return View();
-          
-        }
-        */
-
-        [HttpPost]
+        // POST: /student/course/image/create
+        [HttpPost("image/create")]
         public async Task<IActionResult> CreateImage(IFormFile imageFile, int CourseID)
         {
             if (imageFile != null && imageFile.Length > 0)
@@ -116,7 +72,6 @@ namespace ITI.ExamSystem.Controllers.StudentController
                 var extension = Path.GetExtension(imageFile.FileName).ToLower();
                 if (!new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(extension))
                 {
-                    // You can show a message or redirect with an error
                     TempData["Error"] = "Invalid image format. Please upload JPG, PNG, or GIF.";
                     return RedirectToAction(" ",new { id = CourseID });
                 }
@@ -127,53 +82,20 @@ namespace ITI.ExamSystem.Controllers.StudentController
                     TempData["Error"] = "Course not found.";
                     return RedirectToAction(" ", new { id = CourseID });
                 }
-                // Unique filename
                 var fileName = Guid.NewGuid().ToString() + extension;
                 var imagePath = Path.Combine("wwwroot/images", fileName);
-
-                // Save image to wwwroot/images
                 using (var stream = new FileStream(imagePath, FileMode.Create))
                 {
                     await imageFile.CopyToAsync(stream);
                 }
-
-                // Save image path to DB
-               
                 course.CourseImagePath = "/images/" + fileName;
 
                 db.SaveChanges();
             }
-
-          
             return RedirectToAction ("createImage" , new {id = CourseID});
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        [HttpGet("index")]
         public IActionResult Index()
         {
             return View();

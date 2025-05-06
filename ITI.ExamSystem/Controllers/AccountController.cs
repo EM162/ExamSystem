@@ -30,14 +30,17 @@ namespace ITI.ExamSystem.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailSender _emailSender;
 
+        private readonly OnlineExaminationDBContext _db;
         public AccountController(UserManager<ApplicationUser> userManager,
                                  SignInManager<ApplicationUser> signInManager,
+                                 IEmailSender emailsender,
                                  RoleManager<IdentityRole> roleManager,
-                                 IEmailSender emailsender)
+                                 OnlineExaminationDBContext db)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _db = db;
             _emailSender = emailsender;
         }
 
@@ -86,9 +89,26 @@ namespace ITI.ExamSystem.Controllers
                         ExpiresUtc = DateTime.UtcNow.AddHours(6)
                     });
 
-                //redirect role base condition//
+                ////redirect role base condition//
 
 
+                //if (roles.Contains("Admin"))
+                //{
+                //    return RedirectToAction("Dashboard", "Admin");
+                //}
+                //else if (roles.Contains("Instructor"))
+                //{
+                //    return RedirectToAction("Index", "InstructorDashboard");
+                //}
+                //else if (roles.Contains("Student"))
+                //{
+                //    return RedirectToAction("StudentCourse", "Course", new { studentID = user.Id });
+                //}
+                //else
+                //{
+                //    // fallback if role is unexpected
+                //    return RedirectToAction("Index", "Home");
+                //}
                 return RedirectToAction("Index", "Home");
             }
 
@@ -247,6 +267,44 @@ namespace ITI.ExamSystem.Controllers
                 await _emailSender.SendEmailAsync(user.Email, "Activate Your Exam Account", message);
 
 
+                await _userManager.AddToRoleAsync(user, selectedRole.Name);
+
+                //--
+                var customUser = new User
+                {
+                    FullName = model.FullName,
+                    Email = model.Email,
+                    PasswordHash = user.PasswordHash,
+                    RegistrationDate = DateTime.UtcNow,
+                    IdentityUserId = user.Id,
+                    IsDeleted = false
+                };
+                _db.Users.Add(customUser);
+                await _db.SaveChangesAsync();
+
+                var trackedUser = await _db.Users
+                    .Include(u => u.Roles)
+                    .FirstOrDefaultAsync(u => u.IdentityUserId == user.Id);
+
+                var selectedRoleName = model.Role;
+
+                var dbRole = await _db.Roles
+                    .FirstOrDefaultAsync(r => r.RoleName.ToLower() == selectedRoleName.ToLower());
+
+                if (dbRole == null)
+                {
+                    ModelState.AddModelError("", $"Role '{selectedRoleName}' not found in DB.");
+                    return View("FirstRegister", model);
+                }
+
+
+                if (trackedUser != null && dbRole != null)
+                {
+                    trackedUser.Roles.Add(dbRole);
+                    await _db.SaveChangesAsync();
+                }
+                //--
+
                 return RedirectToAction("Index", "Home");
             }
 
@@ -333,13 +391,50 @@ namespace ITI.ExamSystem.Controllers
                 //Temp creating the role
                 //if (!await _roleManager.RoleExistsAsync(role))
                 //    await _roleManager.CreateAsync(new IdentityRole(role));
+
                 if (!await _roleManager.RoleExistsAsync(role))
                 {
                     ModelState.AddModelError("", $"The role '{role}' does not exist.");
                     return View("FirstRegister", model);
                 }
-
                 await _userManager.AddToRoleAsync(user, role);
+
+                //--
+                var customUser = new User
+                {
+                    FullName = model.FullName,
+                    Email = model.Email,
+                    PasswordHash = user.PasswordHash,
+                    RegistrationDate = DateTime.UtcNow,
+                    IdentityUserId = user.Id,
+                    IsDeleted = false
+                };
+                _db.Users.Add(customUser);
+                await _db.SaveChangesAsync();
+
+                var trackedUser = await _db.Users
+                    .Include(u => u.Roles)
+                    .FirstOrDefaultAsync(u => u.IdentityUserId == user.Id);
+
+                var selectedRoleName = model.Role;
+
+                var dbRole = await _db.Roles
+                    .FirstOrDefaultAsync(r => r.RoleName.ToLower() == selectedRoleName.ToLower());
+
+                if (dbRole == null)
+                {
+                    ModelState.AddModelError("", $"Role '{selectedRoleName}' not found in DB.");
+                    return View("FirstRegister", model);
+                }
+
+
+                if (trackedUser != null && dbRole != null)
+                {
+                    trackedUser.Roles.Add(dbRole);
+                    await _db.SaveChangesAsync(); 
+                }
+                //--
+
                 return RedirectToAction("Index", "Home");
             }
 

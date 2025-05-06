@@ -1,0 +1,95 @@
+﻿@using X.PagedList.Mvc.Core;
+@using X.PagedList
+@model IPagedList<User>
+@{
+  ViewData["Title"] = "GetCourseStudents";
+}
+
+ <div class="content-container"> 
+     <div class="welcome-section"> 
+         <a asp-action="instructorCourses" class="createStudent">Back</a>
+
+         <table class="table">
+             <thead>
+                 <tr> 
+                     <th>ID</th>
+                     <th>Full Name</th>
+                     <th>Email</th>
+                     <th>Registration Date</th>
+                     <th>Profile Photo</th>
+                 </tr>
+             </thead>
+             <tbody> 
+                 @foreach (var student in Model)
+                 { 
+                     <tr> 
+                         <td>@student.UserID</td> 
+                         <td> 
+                             @{ 
+                                 var fullName = student.FullName; 
+                                 if (!string.IsNullOrEmpty(ViewBag.searchTerm)) 
+                                 {
+                                     var searchTerm = ViewBag.searchTerm as string; 
+                                     fullName = fullName.Replace(searchTerm, $"<strong>{searchTerm}</strong>", StringComparison.OrdinalIgnoreCase); 
+                                 } 
+                                 @Html.Raw(fullName) 
+                             } 
+                         </td> 
+                         <td>@student.Email</td> 
+                         <td>@(student.RegistrationDate.HasValue ? student.RegistrationDate.Value.ToShortDateString() : "N/A")</td> 
+                         <td> 
+                             @if (!string.IsNullOrEmpty(student.ProfileImagePath)) 
+                             { 
+                                 <img src="@Url.Content("~/images/" + student.ProfileImagePath)" alt="Profile Photo" style="width: 50px; height: 50px;" /> 
+                             } 
+                             else 
+                             { 
+                                 <span>No Photo</span> 
+                             } 
+                         </td> 
+                     </tr> 
+                 } 
+             </tbody> 
+         </table>
+
+         <div class="pagination-container">
+             @if (!string.IsNullOrEmpty(ViewBag.SearchTerm)) 
+             { 
+                 @Html.PagedListPager(Model, page => Url.Action("SearchStudents", new { page, searchTerm = ViewBag.SearchTerm }),
+                          new PagedListRenderOptions 
+             { 
+                 DisplayLinkToFirstPage = PagedListDisplayMode.Always, 
+                 DisplayLinkToLastPage = PagedListDisplayMode.Always, 
+                 DisplayLinkToPreviousPage = PagedListDisplayMode.Always, 
+                 DisplayLinkToNextPage = PagedListDisplayMode.Always, 
+                 LinkToPreviousPageFormat = "<i class='fas fa-chevron-left'></i>", 
+                 LinkToNextPageFormat = "<i class='fas fa-chevron-right'></i>", 
+                 MaximumPageNumbersToDisplay = 7, 
+                 LiElementClasses = new[] { "page-item" },
+                 PageClasses = new[] { "page-link" } 
+             }) 
+             } 
+             else 
+             { 
+                 @Html.PagedListPager(Model, page => Url.Action("GetCourseStudents", new { page }), 
+                          new PagedListRenderOptions 
+             { 
+                 DisplayLinkToFirstPage = PagedListDisplayMode.Always, 
+                 DisplayLinkToLastPage = PagedListDisplayMode.Always, 
+                 DisplayLinkToPreviousPage = PagedListDisplayMode.Always, 
+                 DisplayLinkToNextPage = PagedListDisplayMode.Always, 
+                 LinkToPreviousPageFormat = "<i class='fas fa-chevron-left'></i>", 
+                 LinkToNextPageFormat = "<i class='fas fa-chevron-right'></i>", 
+                 MaximumPageNumbersToDisplay = 7, 
+                 LiElementClasses = new[] { "page-item" },
+                 PageClasses = new[] { "page-link" }
+             }) 
+             } 
+
+
+         </div> 
+     </div> 
+ </div> 
+
+
+

@@ -63,7 +63,7 @@ namespace ITI.ExamSystem
             builder.Services.AddScoped<IStudentRepositary, StudentRepositary>();
 
             builder.Services.AddAutoMapper(typeof(StuduentProfileAutoMapper));
-            //builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
+            builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
             //        builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
             //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -98,7 +98,7 @@ namespace ITI.ExamSystem
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Login}/{id?}");
 
             app.Run();
         }

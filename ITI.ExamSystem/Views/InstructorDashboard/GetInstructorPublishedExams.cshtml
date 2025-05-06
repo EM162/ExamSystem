@@ -1,0 +1,52 @@
+﻿
+@model List<PublishedExam>
+@{
+    ViewData["Title"] = "GetInstructorPublishedExams";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/StudentTopics.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+}
+<div class="content-container">
+    <div class="welcome-section">
+        <div class="container">
+            <a asp-action="InstructorCourses" class="btn btn-primary">Back</a>
+            <div class="row">
+                <h1>PublishedExams</h1>
+                @foreach (var exam in Model)
+                {
+                    <div class="col-lg-4">
+                        <div class="card card-margin">
+                            <div class="card-header no-border">
+                                <i class="fa-solid fa-book-open-reader fa-lg" style="color: #B197FC;"></i>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="widget-49">
+                                    <div class="widget-49-title-wrapper">
+
+                                        <div class="widget-49-meeting-info">
+                                            <span class="widget-49-pro-title ">@exam.PublishedExamID</span>
+
+                                        </div>
+                                    </div>
+                                    <ul class="widget-49-meeting-points">
+                                        <li class="widget-49-meeting-item"><b>Branch :</b><span> @exam.Branch.BranchName</span></li>
+                                        <li class="widget-49-meeting-item"><b>Track :</b><span> @exam.Track.TrackName</span></li>
+                                        <li class="widget-49-meeting-item"><b>Intack :</b><span> @exam.Intake.IntakeName</span></li>
+                                        <li class="widget-49-meeting-item"><b>Date :</b><span> @exam.PublishDate</span></li>
+                                        <li class="widget-49-meeting-item"><b>Exam Id :</b><span> @exam.ExamID </span></li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

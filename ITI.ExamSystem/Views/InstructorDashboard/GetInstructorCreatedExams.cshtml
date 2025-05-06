@@ -1,0 +1,61 @@
+﻿
+@model List<Exam>
+@{
+    ViewData["Title"] = "GetInstructorCreatedExams";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/StudentTopics.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+}
+<div class="content-container">
+    <div class="welcome-section">
+        <div class="container">
+            <a asp-action="CreateExam" class="btn btn-primary">Add Exam</a>
+            <div class="row">
+                <h1>Exams</h1>
+                @foreach (var exam in Model)
+                {
+                    <div class="col-lg-4">
+                        <div class="card card-margin">
+                            <div class="card-header no-border">
+                                <i class="fa-solid fa-book-open-reader fa-lg" style="color: #B197FC;"></i>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="widget-49">
+                                    <div class="widget-49-title-wrapper">
+
+                                        <div class="widget-49-meeting-info">
+                                            @* <span class="widget-49-pro-title ">@exam.ExamID</span> *@
+                                            <span class="widget-49-pro-title ">@exam.Course?.Name</span>
+                                            @* <h2> @ViewBag.ExamTitle</h2> *@
+
+                                        </div>
+                                    </div>
+                                    <ul class="widget-49-meeting-points">
+                                        <li class="widget-49-meeting-item"><b>ExamType :</b><span> @exam.ExamType</span></li>
+                                        <li class="widget-49-meeting-item"><b>ExamDate :</b><span> @exam.ExamDate</span></li>
+                                        <li class="widget-49-meeting-item"><b>MCQCount :</b><span> @exam.MCQQuestionCount Question</span></li>
+                                        <li class="widget-49-meeting-item"><b>T/FCount :</b><span> @exam.TrueFalseQuestionCount Question</span></li>
+                                        <li class="widget-49-meeting-item"><b>Duration :</b><span> @exam.Duration Munits</span></li>
+                                    </ul>
+                                    <a asp-action="PublishExam" asp-route-examId="@exam.ExamID" class="btn btn-success mt-2">
+                                        Publish Exam
+                                    </a>
+                                    <a asp-action="AddQuestions" asp-route-examId="@exam.ExamID" class="btn btn-secondary mt-2">Add Questions</a>
+                                    <a asp-action="ViewExamQuestions" asp-route-examId="@exam.ExamID" class="btn btn-info mt-2">
+                                        View Questions
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
