@@ -8,6 +8,9 @@ using eF_Kres.ModelViews;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ITI.ExamSystem.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using System.Net;
 
 
 
@@ -25,10 +28,12 @@ namespace ITI.ExamSystem.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IEmailSender _emailSender;
 
         private readonly OnlineExaminationDBContext _db;
         public AccountController(UserManager<ApplicationUser> userManager,
                                  SignInManager<ApplicationUser> signInManager,
+                                 IEmailSender emailsender,
                                  RoleManager<IdentityRole> roleManager,
                                  OnlineExaminationDBContext db)
         {
@@ -36,6 +41,7 @@ namespace ITI.ExamSystem.Controllers
             _signInManager = signInManager;
             _roleManager = roleManager;
             _db = db;
+            _emailSender = emailsender;
         }
 
 
@@ -136,13 +142,20 @@ namespace ITI.ExamSystem.Controllers
                 .OrderBy(r => int.Parse(r.Id))
                 .ToList();
 
+            var availableRoles_checkList= availableRoles.Select(r=> new RoleviewModel { id= int.Parse(r.Id) , Name=r.Name, IsSelected=false}).ToList();
+
+            //var model = new RegisterViewModel
+            //{
+            //    Roles = availableRoles.Select(r => new SelectListItem
+            //    {
+            //        Value = r.Name,
+            //        Text = r.Name
+            //    }).ToList()
+            //};
+
             var model = new RegisterViewModel
             {
-                Roles = availableRoles.Select(r => new SelectListItem
-                {
-                    Value = r.Name,
-                    Text = r.Name
-                }).ToList()
+                Roles = availableRoles_checkList
             };
 
 
@@ -164,22 +177,59 @@ namespace ITI.ExamSystem.Controllers
             var currentRoles = await _userManager.GetRolesAsync(currentUser);
             var currentRole = await _roleManager.FindByNameAsync(currentRoles.FirstOrDefault());
 
-            //valdate it
-            var selectedRole = await _roleManager.FindByNameAsync(model.SelectedRole);
-            if (selectedRole == null)
+            ////valdate it
+            //var selectedRole = await _roleManager.FindByNameAsync(model.SelectedRole);
+            //if (selectedRole == null)
+            //{
+            //    ModelState.AddModelError("", "Invalid role selection");
+            //    return View("Register", model);
+            //}
+
+            //// Convert IDs to integers for comparison
+            //int currentRoleId = int.Parse(currentRole.Id);
+            //int selectedRoleId = int.Parse(selectedRole.Id);
+
+            //// Ensure selected role has lower privilege (higher numeric ID)
+            //if (selectedRoleId <= currentRoleId)
+            //{
+            //    ModelState.AddModelError("", "You cannot create accounts for this role.");
+            //    return View("Register", model);
+            //}
+
+            int currentRoleId = int.Parse(currentRole.Id);
+
+            var selectedRoles = model.Roles.Where(r => r.IsSelected).ToList();
+
+
+            if (!selectedRoles.Any())
             {
-                ModelState.AddModelError("", "Invalid role selection");
+                ModelState.AddModelError("", "Please select at least one role.");
                 return View("Register", model);
             }
 
-            // Convert IDs to integers for comparison
-            int currentRoleId = int.Parse(currentRole.Id);
-            int selectedRoleId = int.Parse(selectedRole.Id);
-
-            // Ensure selected role has lower privilege (higher numeric ID)
-            if (selectedRoleId <= currentRoleId)
+            // Validate each selected role
+            foreach (var role in selectedRoles)
             {
-                ModelState.AddModelError("", "You cannot create accounts for this role.");
+                var selectedRole = await _roleManager.FindByIdAsync(role.id.ToString());
+                if (selectedRole == null)
+                {
+                    ModelState.AddModelError("", $"Invalid role selection: {role.Name}");
+                    return View("Register", model);
+                }
+
+                int selectedRoleId = int.Parse(selectedRole.Id);
+
+                if (selectedRoleId <= currentRoleId)
+                {
+                    ModelState.AddModelError("",
+                        $"You cannot create accounts for the {role.Name} role.");
+                    return View("Register", model);
+                }
+            }
+
+            if (!model.Roles.Any(r=>r.IsSelected))
+            {
+                ModelState.AddModelError("", "No Role selected!");
                 return View("Register", model);
             }
 
@@ -196,7 +246,28 @@ namespace ITI.ExamSystem.Controllers
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, selectedRole.Name);
+                //await _userManager.AddToRoleAsync(user, selectedRole.Name);
+                //var selectedRoles = model.Roles.Where(r => r.IsSelected).ToList();
+                // Assign to SelectedRole (if single selection)
+                model.SelectedRole = selectedRoles.FirstOrDefault()?.Name;
+
+                await _userManager.AddToRolesAsync(user,model.Roles.Where(r=>r.IsSelected==true).Select(r => r.Name));
+
+                //Add Email Sender Service 
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var encodedToken = WebUtility.UrlEncode(token);
+                var confirmationLink = Url.Action("ConfirmEmail", "Account",
+                    new { userId = user.Id, token = encodedToken }, Request.Scheme);
+
+                var message = $@"
+                   Welcome to the Exam System!<br/>
+                    Your temporary password is: <strong>{model.Password}</strong><br/>
+                   Please confirm your email to activate your account by clicking <a href='{confirmationLink}'>here</a>.";
+
+                await _emailSender.SendEmailAsync(user.Email, "Activate Your Exam Account", message);
+
+
+                //await _userManager.AddToRoleAsync(user, selectedRole.Name);
 
                 //--
                 var customUser = new User
@@ -372,6 +443,59 @@ namespace ITI.ExamSystem.Controllers
 
             return View("FirstRegister", model);
         }
+
+        //Get: Confirm Email Registeration 
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+                return BadRequest("Invalid confirmation parameters");
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return NotFound("User not found");
+
+            var decodedToken = WebUtility.UrlDecode(token);
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                return BadRequest($"Email confirmation failed: {errors}");
+            }
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Login");
+            }
+
+            return BadRequest("Email confirmation failed");
+        }
+
+        //Post: Delete User
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return BadRequest("User ID is required.");
+
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+                return NotFound("User not found.");
+
+            var result = await _userManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+                return Ok("User deleted successfully.");
+
+            // Return error details if deletion fails
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            return BadRequest(ModelState);
+        }
+
 
     }
 }
