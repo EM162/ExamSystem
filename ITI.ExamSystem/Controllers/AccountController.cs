@@ -267,7 +267,7 @@ namespace ITI.ExamSystem.Controllers
                 await _emailSender.SendEmailAsync(user.Email, "Activate Your Exam Account", message);
 
 
-                await _userManager.AddToRoleAsync(user, selectedRole.Name);
+                //await _userManager.AddToRoleAsync(user, selectedRole.Name);
 
                 //--
                 var customUser = new User
