@@ -24,6 +24,7 @@ namespace eF_Kres.ModelViews
         public string? Role { get; set; }
 
         public string? SelectedRole { get; set; }
-        public List<SelectListItem> Roles { get; set; } = new();
+        //public List<SelectListItem> Roles { get; set; } = new();
+        public List<RoleviewModel> Roles { get; set; } = new();
     }
 }

@@ -34,15 +34,43 @@
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+   @*  <div class="form-group">
         <label asp-for="SelectedRole"></label>
         <select asp-for="SelectedRole" asp-items="Model.Roles" class="form-control">
             <option value="">-- Select Role --</option>
         </select>
         <span asp-validation-for="SelectedRole" class="text-danger"></span>
+    </div> *@
+    <div class="form-group">
+        <label>Select Roles</label>
+        @for (int i = 0; i < Model.Roles.Count; i++)
+        {
+            <div class="form-check mb-2">
+                <input type="hidden" asp-for="Roles[i].id" />
+                <input type="hidden" asp-for="Roles[i].Name" />
+
+                <input class="form-check-input"
+                       type="checkbox"
+                       asp-for="Roles[i].IsSelected"
+                       id="role-@i" />
+
+                <label class="form-check-label" for="role-@i">
+                    @Model.Roles[i].Name
+                </label>
+            </div>
+        }
+        @* @for (int i = 0; i < Model.Roles.Count; i++)
+        {
+        
+        <input type="checkbox" value="@Model.Roles[i].id" id="@Model.Roles[i].id" /> @Model.Roles[i].Name <br />
+        @Html.HiddenFor(m => Model.Roles[i].id);
+        @Html.HiddenFor(m => Model.Roles[@i].Name);
+        @Html.HiddenFor(m => Model.Roles[i].IsSelected);
+       
+        } *@
     </div>
 
-    <button type="submit" class="btn btn-success">Register</button>
+    <button type="submit" class="btn btn-success">Create</button>
 </form>
 
 @section Scripts {

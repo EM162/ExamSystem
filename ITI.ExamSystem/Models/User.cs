@@ -56,4 +56,6 @@ public partial class User
     [ForeignKey("UserID")]
     [InverseProperty("Users")]
     public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
+
+
 }

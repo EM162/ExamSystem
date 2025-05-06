@@ -1,7 +1,10 @@
 ﻿using ITI.ExamSystem.Mapping;
 using ITI.ExamSystem.Models;
 using ITI.ExamSystem.Repository;
+using ITI.ExamSystem.Services;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITI.ExamSystem
@@ -12,7 +15,7 @@ namespace ITI.ExamSystem
         {
             var builder = WebApplication.CreateBuilder(args);
 
-             //✅ Read connection string from environment variable
+            //✅ Read connection string from environment variable
             var connectionString = Environment.GetEnvironmentVariable("EXAM_DB_CONNECTION");
 
             Console.WriteLine("CONNECTION STRING:");
@@ -30,7 +33,8 @@ namespace ITI.ExamSystem
             //if (myconnectionString == null)
             //    throw new InvalidOperationException("No connection string found for EXAM_DB_CONNECTION or DefaultConnection.");
 
-
+            var keysPath = Path.Combine(Directory.GetCurrentDirectory(), "DataProtectionKeys");
+            Directory.CreateDirectory(keysPath);
 
             builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
                 options.UseSqlServer(connectionString));
@@ -48,18 +52,30 @@ namespace ITI.ExamSystem
             {
                 options.User.RequireUniqueEmail = true;
                 options.User.AllowedUserNameCharacters = null;
+                //Email Service required
+                options.SignIn.RequireConfirmedEmail = true;
             });
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-
+            builder.Services.AddScoped<SpAdmin_Repo>();
 
             builder.Services.AddScoped<IStudentRepositary, StudentRepositary>();
 
             builder.Services.AddAutoMapper(typeof(StuduentProfileAutoMapper));
-           //builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
+            //builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
             //        builder.Services.AddDbContext<OnlineExaminationDBContext>(options =>
             //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo(keysPath))
+            .SetApplicationName("ExamSystem");
+
+            builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
+                opt.TokenLifespan = TimeSpan.FromHours(2));
+
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+
 
 
             var app = builder.Build();
