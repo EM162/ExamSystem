@@ -1,0 +1,54 @@
+﻿@model ITI.ExamSystem.ModelViews.UserViewModel
+
+<div class="modal-header">
+    <h5 class="modal-title">Edit User</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+<form asp-action="Edit" method="post">
+    <div class="modal-body">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="UserID" />
+
+        <div class="mb-3">
+            <label asp-for="FullName" class="form-label"></label>
+            <input asp-for="FullName" class="form-control" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ProfileImagePath" class="form-label"></label>
+            <input asp-for="ProfileImagePath" class="form-control" />
+            <span asp-validation-for="ProfileImagePath" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Roles</label>
+            <div class="role-checkboxes">
+                @for (int i = 0; i < Model.AvailableRoles.Count; i++)
+                {
+                    <div class="form-check">
+                        <input type="hidden" asp-for="@Model.AvailableRoles[i].RoleId" />
+                        <input type="hidden" asp-for="@Model.AvailableRoles[i].RoleName" />
+                        <input class="form-check-input"
+                               type="checkbox"
+                               asp-for="@Model.AvailableRoles[i].IsSelected" />
+                        <label class="form-check-label"
+                               asp-for="@Model.AvailableRoles[i].IsSelected">
+                            @Model.AvailableRoles[i].RoleName
+                        </label>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+</form>

@@ -1,0 +1,188 @@
+﻿@model List<ITI.ExamSystem.ModelViews.StudentProgressViewModel>
+
+<div class="container mt-4">
+    <h2>Student Progress Analysis</h2>
+    
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search by name or email...">
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Student</th>
+                    <th>Average Grade</th>
+                    <th>Exams Taken</th>
+                    <th>Subject Performance</th>
+                    <th>Exam History</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="fw-bold">@student.FullName</div>
+                            <div class="text-muted small">@student.Email</div>
+                        </td>
+                        <td class="align-middle">
+                            <div class="display-4">@student.AverageGrade.ToString("0.0")</div>
+                            <div class="progress" style="height: 3px;">
+                                <div class="progress-bar" 
+                                     style="width: @student.AverageGrade%"></div>
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span class="badge bg-primary rounded-pill">@student.ExamsTaken</span>
+                        </td>
+                        <td>
+                            @foreach (var subject in student.SubjectAverages)
+                            {
+                                <div class="mb-2">
+                                    <div class="d-flex justify-content-between small">
+                                        <span>@subject.Key</span>
+                                        <span>@subject.Value.ToString("0.0")%</span>
+                                    </div>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar" 
+                                             role="progressbar" 
+                                             style="width: @subject.Value%"
+                                             aria-valuenow="@subject.Value" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            <div class="accordion" id="history-@student.UserID">
+                                @foreach (var exam in student.ExamHistory)
+                                {
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" 
+                                                    type="button" 
+                                                    data-bs-toggle="collapse" 
+                                                    data-bs-target="#exam-@student.UserID-@exam.GetHashCode()">
+                                                @exam.ExamTitle - @exam.ExamDate.ToString("dd MMM yyyy")
+                                            </button>
+                                        </h2>
+                                        <div id="exam-@student.UserID-@exam.GetHashCode()" 
+                                             class="accordion-collapse collapse" 
+                                             data-bs-parent="#history-@student.UserID">
+                                            <div class="accordion-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <dl class="row">
+                                                            <dt class="col-sm-5">Subject:</dt>
+                                                            <dd class="col-sm-7">@exam.Subject</dd>
+                                                            
+                                                            <dt class="col-sm-5">Duration:</dt>
+                                                            <dd class="col-sm-7">@exam.Duration minutes</dd>
+                                                            
+                                                            <dt class="col-sm-5">Questions:</dt>
+                                                            <dd class="col-sm-7">@exam.QuestionCount</dd>
+                                                        </dl>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="chart-container" style="height: 150px;">
+                                                            <canvas 
+                                                                data-grade="@exam.Grade"
+                                                                data-average="@student.SubjectAverages[exam.Subject]"
+                                                                data-subject="@exam.Subject">
+                                                            </canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize radial charts for individual exams
+            document.querySelectorAll('.chart-container canvas').forEach(canvas => {
+                const ctx = canvas.getContext('2d');
+                const grade = parseFloat(canvas.dataset.grade);
+                const average = parseFloat(canvas.dataset.average);
+                const subject = canvas.dataset.subject;
+
+                new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Student Score', 'Class Average'],
+                        datasets: [{
+                            label: subject,
+                            data: [grade, average],
+                            backgroundColor: 'rgba(78, 115, 223, 0.2)',
+                            borderColor: '#4e73df',
+                            pointBackgroundColor: '#4e73df',
+                            pointBorderColor: '#fff',
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: { display: false },
+                                grid: { color: 'rgba(0,0,0,0.1)' }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: (context) => `${context.dataset.label}: ${context.raw}%`
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', function () {
+                const filter = this.value.toLowerCase();
+                document.querySelectorAll('tbody tr').forEach(row => {
+                    const name = row.cells[0].textContent.toLowerCase();
+                    const email = row.cells[0].querySelector('.text-muted').textContent.toLowerCase();
+                    row.style.display = (name.includes(filter) || email.includes(filter)) 
+                        ? '' 
+                        : 'none';
+                });
+            });
+        });
+    </script>
+    
+    <style>
+        .accordion-button:not(.collapsed) {
+            background-color: #f8f9fa;
+            box-shadow: none;
+        }
+        .chart-container {
+            position: relative;
+        }
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+        .badge.rounded-pill {
+            min-width: 50px;
+        }
+    </style>
+}

@@ -1,0 +1,64 @@
+﻿
+@model IEnumerable<eF_Kres.ModelViews.RoleviewModel>
+
+<div class="container mt-4">
+    <h2>Role Management</h2>
+    <button class="btn btn-primary mb-3"
+            data-bs-toggle="modal"
+            data-bs-target="#roleModal"
+            data-url="@Url.Action("Create")">
+        Create New Role
+    </button>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Role Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var role in Model)
+            {
+                <tr>
+                    <td>@role.RoleName</td>
+                    <td>@role.Description</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#roleModal"
+                                data-url="@Url.Action("Edit", new { id = role.RoleId })">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <form asp-action="Delete" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@role.RoleId" />
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Role Modal -->
+<div class="modal fade" id="roleModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" id="roleModalContent">
+            <!-- Content loaded via AJAX -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $('#roleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var url = button.data('url');
+            $('#roleModalContent').load(url);
+        });
+    </script>
+}

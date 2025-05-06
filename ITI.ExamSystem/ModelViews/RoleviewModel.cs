@@ -8,5 +8,19 @@ namespace eF_Kres.ModelViews
     {
         [Key]
         public string Name {set; get;}
+
+        public int id {set; get;}
+
+        public bool IsSelected {set; get;}
+
+        public string? RoleId { get; set; }
+
+        
+        [StringLength(50)]
+        public string? RoleName { get; set; }
+
+        
+        public string? Description { get; set; }
+
     }
 }
