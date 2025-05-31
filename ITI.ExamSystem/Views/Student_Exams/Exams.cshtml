@@ -39,7 +39,7 @@
                 <thead>
                     <tr>
                         <th>Exam ID</th>
-                        <th>Exam Date</th>
+                        <th>Publish Date</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -48,9 +48,9 @@
                     {
                         <tr>
                             <td>@exam.ExamID</td>
-                            <td>@exam.Exam?.ExamDate?.ToString("yyyy-MM-dd")</td>
+                            <td>@exam.PublishDate?.ToString("yyyy-MM-dd HH:mm")</td>
                             <td>
-                                @if (exam.Exam?.ExamDate <= DateTime.Now && !Model.FinishedExamIds.Contains(exam.ExamID))
+                                @if (exam.PublishDate < DateTime.Now && !Model.FinishedExamIds.Contains(exam.ExamID))
                                 {
                                     <a asp-controller="Exam" asp-action="Start" asp-route-examId="@exam.ExamID" class="btn btn-success btn-sm">Open Exam</a>
                                 }

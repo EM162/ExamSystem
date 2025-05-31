@@ -39,6 +39,13 @@
         <span asp-validation-for="IntakeID" class="text-danger"></span>
     </div>
 
+    <div class="mb-3">
+        <label asp-for="PublishDate" class="form-label">Publish Date</label>
+        <input asp-for="PublishDate" type="datetime-local" class="form-control" />
+        <span asp-validation-for="PublishDate" class="text-danger"></span>
+    </div>
+
+
     <button type="submit" class="btn btn-primary">Publish</button>
 </form>
 

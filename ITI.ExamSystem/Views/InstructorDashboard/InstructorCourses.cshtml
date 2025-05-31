@@ -18,13 +18,13 @@
                 {
                     <div class="col-lg-4">
                         <div class="card card-margin">
-                        <div class=" no-border text-center">
-                                <img src="~/images/@(!string.IsNullOrEmpty(item.CourseImagePath) ? item.CourseImagePath : "/m1.jpg")"
-                                     alt="Profile Image"
+                            <div class="no-border text-center">
+                                <img src="@(Url.Content(string.IsNullOrEmpty(item.CourseImagePath) ? "~/images/m2.png" : item.CourseImagePath))"
+                                     alt="Course Image"
                                      style="width:100px; height:100px; object-fit:cover; border-radius:50%; margin-top:20px; margin-bottom:10px" />
 
-                                @* <img src="~/images/@(!string.IsNullOrEmpty(item.CourseImagePath) ? item.CourseImagePath : "/m1.jpg")" alt="Profile Image" style="width:200px" /> *@
                             </div>
+
                         <div class="card-body pt-0">
                             <div class="widget-49">
                                 <div class="widget-49-title-wrapper">

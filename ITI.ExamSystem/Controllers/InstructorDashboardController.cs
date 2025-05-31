@@ -259,19 +259,55 @@ namespace ITI.ExamSystem.Controllers
         }
 
 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> PublishExam(PublishedExam publishedExam)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        // Repopulate dropdowns
+        //        ViewBag.Branches = new SelectList(_context.Branches, "BranchID", "BranchName");
+        //        ViewBag.Tracks = new SelectList(_context.Tracks, "TrackID", "TrackName");
+        //        ViewBag.Intakes = new SelectList(_context.Intakes, "IntakeID", "IntakeName");
+
+        //        return View(publishedExam);
+        //    }
+        //    var exists = await _context.PublishedExams.AnyAsync(p =>
+        //        p.ExamID == publishedExam.ExamID &&
+        //        p.BranchID == publishedExam.BranchID &&
+        //        p.TrackID == publishedExam.TrackID &&
+        //        p.IntakeID == publishedExam.IntakeID);
+
+        //    if (exists)
+        //    {
+        //        ModelState.AddModelError("", "This exam is already published to the selected Branch/Track/Intake.");
+        //        ViewBag.Branches = new SelectList(_context.Branches, "BranchID", "BranchName");
+        //        ViewBag.Tracks = new SelectList(_context.Tracks, "TrackID", "TrackName");
+        //        ViewBag.Intakes = new SelectList(_context.Intakes, "IntakeID", "IntakeName");
+        //        return View(publishedExam);
+        //    }
+
+        //    publishedExam.PublishDate = DateTime.Now;
+
+        //    _context.PublishedExams.Add(publishedExam);
+        //    await _context.SaveChangesAsync();
+
+        //    TempData["Success"] = "Exam published successfully!";
+        //    return RedirectToAction("GetInstructorCreatedExams");
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PublishExam(PublishedExam publishedExam)
         {
             if (!ModelState.IsValid)
             {
-                // Repopulate dropdowns
                 ViewBag.Branches = new SelectList(_context.Branches, "BranchID", "BranchName");
                 ViewBag.Tracks = new SelectList(_context.Tracks, "TrackID", "TrackName");
                 ViewBag.Intakes = new SelectList(_context.Intakes, "IntakeID", "IntakeName");
-
                 return View(publishedExam);
             }
+
             var exists = await _context.PublishedExams.AnyAsync(p =>
                 p.ExamID == publishedExam.ExamID &&
                 p.BranchID == publishedExam.BranchID &&
@@ -287,14 +323,14 @@ namespace ITI.ExamSystem.Controllers
                 return View(publishedExam);
             }
 
-            publishedExam.PublishDate = DateTime.Now;
-
+            // ✅ No need to set PublishDate here, user chose it
             _context.PublishedExams.Add(publishedExam);
             await _context.SaveChangesAsync();
 
             TempData["Success"] = "Exam published successfully!";
             return RedirectToAction("GetInstructorCreatedExams");
         }
+
 
         public async Task<IActionResult> ViewExamQuestions(int examId)
         {

@@ -48,7 +48,7 @@ namespace ITI.ExamSystem.Controllers
                 .Include(p => p.Intake)
                 .Include(p => p.Branch)
                 .Where(p =>
-                    p.PublishDate >= now &&
+                    (p.PublishDate <= now || p.PublishDate >= now) &&
                     trackIds.Contains(p.TrackID) &&
                     intakeIds.Contains(p.IntakeID) &&
                     branchIds.Contains(p.BranchID)

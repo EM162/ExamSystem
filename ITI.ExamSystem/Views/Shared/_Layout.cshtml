@@ -28,6 +28,7 @@
     var userIsAdmin = User.IsInRole("Admin");
     var userIsStudent = User.IsInRole("Student");
     var userIsInstructor = User.IsInRole("Instructor");
+    var userIsSuperAdmin = User.IsInRole("SuperAdmin");
 }
 
 
@@ -49,7 +50,7 @@
     @* <link rel="stylesheet" href="@(Url.Content("~/css/AdminDashboard.css"))" /> *@
     @await RenderSectionAsync("Styles", required: false)
 
-    </head>
+</head>
 
 <body>
     <div class="admin-dashboard">
@@ -62,11 +63,11 @@
                 @if (userIsAdmin)
                 {
                     <ul class="nav flex-column px-3">
-                        <li class="nav-item">
-                            <a class="nav-link @(currentAction == "dashboard" ? "active" : "")" asp-action="Dashboard" asp-controller="Admin">
-                                <i class="fas fa-home me-2"></i> Dashboard
-                            </a>
-                        </li>
+                        @* <li class="nav-item"> *@
+                        @*     <a class="nav-link @(currentAction == "dashboard" ? "active" : "")" asp-action="Dashboard" asp-controller="Admin"> *@
+                        @*         <i class="fas fa-home me-2"></i> Dashboard *@
+                        @*     </a> *@
+                        @* </li> *@
                         <li class="nav-item">
                             <a class="nav-link @(currentAction == "readstudents" ? "active" : "")" asp-action="ReadStudents" asp-controller="Admin">
                                 <i class="fas fa-user-graduate me-2"></i> Students
@@ -91,9 +92,9 @@
                         <!-- My Courses -->
                         <li class="nav-item">
                             <a class="nav-link @(currentAction == "studentcourse" ? "active" : "")"
-                               asp-action="StudentCourse"
-                               asp-controller="Course"
-                               asp-route-studentId="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value">
+                            asp-action="StudentCourse"
+                            asp-controller="Course"
+                            asp-route-studentId="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value">
                                 <i class="fas fa-book me-2"></i> My Courses
                             </a>
                         </li>
@@ -101,9 +102,9 @@
                         <!-- My Profile -->
                         <li class="nav-item">
                             <a class="nav-link @(currentAction == "profile" ? "active" : "")"
-                               asp-action="Profile"
-                               asp-controller="StudentProfile"
-                               asp-route-id="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value">
+                            asp-action="Profile"
+                            asp-controller="StudentProfile"
+                            asp-route-id="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value">
                                 <i class="fas fa-user me-2"></i> My Profile
                             </a>
                         </li>
@@ -111,8 +112,8 @@
                         <!-- Upload Course Image -->
                         <li class="nav-item">
                             <a class="nav-link @(currentAction == "createimage" ? "active" : "")"
-                               asp-action="CreateImage"
-                               asp-controller="Course">
+                            asp-action="CreateImage"
+                            asp-controller="Course">
                                 <i class="fas fa-upload me-2"></i> Upload Course Image
                             </a>
                         </li>
@@ -120,8 +121,8 @@
                         <!-- My Exams (assuming your exams controller/view still uses Student_Exams) -->
                         <li class="nav-item">
                             <a class="nav-link @(currentAction == "exams" ? "active" : "")"
-                               asp-action="Exams"
-                               asp-controller="Student_Exams">
+                            asp-action="Exams"
+                            asp-controller="Student_Exams">
                                 <i class="fas fa-file-alt me-2"></i> My Exams
                             </a>
                         </li>
@@ -134,19 +135,19 @@
                 {
                     <ul class="nav flex-column px-3">
                         <!-- Dashboard -->
-                        <li class="nav-item">
-                            <a class="nav-link @(currentAction == "index" ? "active" : "")"
-                               asp-action="Index"
-                               asp-controller="InstructorDashboard">
-                                <i class="fas fa-home me-2"></i> Dashboard
-                            </a>
-                        </li>
+                        @* <li class="nav-item"> *@
+                        @*     <a class="nav-link @(currentAction == "index" ? "active" : "")" *@
+                        @*     asp-action="Index" *@
+                        @*     asp-controller="InstructorDashboard"> *@
+                        @*         <i class="fas fa-home me-2"></i> Dashboard *@
+                        @*     </a> *@
+                        @* </li> *@
 
                         <!-- My Profile -->
                         <li class="nav-item">
                             <a class="nav-link @(currentAction == "instructorprofile" ? "active" : "")"
-                               asp-action="InstructorProfile"
-                               asp-controller="InstructorDashboard">
+                            asp-action="InstructorProfile"
+                            asp-controller="InstructorDashboard">
                                 <i class="fas fa-user me-2"></i> My Profile
                             </a>
                         </li>
@@ -154,8 +155,8 @@
                         <!-- My Courses -->
                         <li class="nav-item">
                             <a class="nav-link @(currentAction == "instructorcourses" ? "active" : "")"
-                               asp-action="InstructorCourses"
-                               asp-controller="InstructorDashboard">
+                            asp-action="InstructorCourses"
+                            asp-controller="InstructorDashboard">
                                 <i class="fas fa-book me-2"></i> My Courses
                             </a>
                         </li>
@@ -163,8 +164,8 @@
                         <!-- My Students -->
                         <li class="nav-item">
                             <a class="nav-link @(currentAction == "getinstructorstudents" ? "active" : "")"
-                               asp-action="GetInstructorStudents"
-                               asp-controller="InstructorDashboard">
+                            asp-action="GetInstructorStudents"
+                            asp-controller="InstructorDashboard">
                                 <i class="fas fa-user-graduate me-2"></i> My Students
                             </a>
                         </li>
@@ -172,8 +173,8 @@
                         <!-- Created Exams -->
                         <li class="nav-item">
                             <a class="nav-link @(currentAction == "getinstructorcreatedexams" ? "active" : "")"
-                               asp-action="GetInstructorCreatedExams"
-                               asp-controller="InstructorDashboard">
+                            asp-action="GetInstructorCreatedExams"
+                            asp-controller="InstructorDashboard">
                                 <i class="fas fa-file-alt me-2"></i> Created Exams
                             </a>
                         </li>
@@ -181,15 +182,85 @@
                         <!-- Published Exams -->
                         <li class="nav-item">
                             <a class="nav-link @(currentAction == "getinstructorpublishedexams" ? "active" : "")"
-                               asp-action="GetInstructorPublishedExams"
-                               asp-controller="InstructorDashboard">
+                            asp-action="GetInstructorPublishedExams"
+                            asp-controller="InstructorDashboard">
                                 <i class="fas fa-bullhorn me-2"></i> Published Exams
                             </a>
                         </li>
                     </ul>
                 }
 
+                @if (userIsSuperAdmin)
+                {
+                    <ul class="nav flex-column px-3">
+                        <!-- Super Admin Dashboard -->
+                        @* <li class="nav-item"> *@
+                        @*     <a class="nav-link @(currentController == "spadmin" && currentAction == "index" ? "active" : "")" *@
+                        @*        asp-action="Index" *@
+                        @*        asp-controller="SpAdmin"> *@
+                        @*         <i class="fas fa-user-shield me-2"></i> Super Admin Dashboard *@
+                        @*     </a> *@
+                        @* </li> *@
 
+                        <!-- Manage Branches -->
+                        <li class="nav-item">
+                            <a class="nav-link @(currentController == "spadmin" && currentAction == "getall" ? "active" : "")"
+                               asp-action="GetAll"
+                               asp-controller="SpAdmin">
+                                <i class="fas fa-building me-2"></i> Manage Branches
+                            </a>
+                        </li>
+
+                        <!-- Student Progress -->
+                        <li class="nav-item">
+                            <a class="nav-link @(currentController == "spadmin" && currentAction == "studentprogress" ? "active" : "")"
+                               asp-action="StudentProgress"
+                               asp-controller="SpAdmin">
+                                <i class="fas fa-chart-line me-2"></i> Student Progress
+                            </a>
+                        </li>
+
+                        <!-- Manage Users -->
+                        <li class="nav-item">
+                            <a class="nav-link @(currentController == "user" && currentAction == "index" ? "active" : "")"
+                               asp-action="Index"
+                               asp-controller="User">
+                                <i class="fas fa-users me-2"></i> Manage Users
+                            </a>
+                        </li>
+
+                        <!-- Manage Roles -->
+                        <li class="nav-item">
+                            <a class="nav-link @(currentController == "role" && currentAction == "index" ? "active" : "")"
+                               asp-action="Index"
+                               asp-controller="Role">
+                                <i class="fas fa-user-tag me-2"></i> Manage Roles
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "readstudents" ? "active" : "")" asp-action="ReadStudents" asp-controller="Admin">
+                                <i class="fas fa-user-graduate me-2"></i> Students
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentController == "account" && currentAction == "register" ? "active" : "")"
+                               asp-action="register"
+                               asp-controller="account">
+                                <i class="fas fa-user-tag me-2"></i> Add New Account
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "readinstructors" ? "active" : "")" asp-action="ReadInstructors" asp-controller="Admin">
+                                <i class="fas fa-chalkboard-teacher me-2"></i> Instructors
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "readcourses" ? "active" : "")" asp-action="ReadCourses" asp-controller="Admin">
+                                <i class="fas fa-book me-2"></i> Courses
+                            </a>
+                        </li>
+                    </ul>
+                }
 
 
             </div>

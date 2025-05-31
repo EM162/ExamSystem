@@ -88,27 +88,17 @@ namespace ITI.ExamSystem.Controllers
                         IsPersistent = model.RememberMe,
                         ExpiresUtc = DateTime.UtcNow.AddHours(6)
                     });
+                // 🔁 Role-based redirect logic
+                if (roles.Contains("SuperAdmin"))
+                    return RedirectToAction("GetAll", "SpAdmin");
+                if (roles.Contains("Admin"))
+                    return RedirectToAction("ReadStudents", "Admin");
+                if (roles.Contains("Instructor"))
+                    return RedirectToAction("InstructorProfile", "InstructorDashboard");
+                if (roles.Contains("Student"))
+                    return RedirectToAction("StudentCourse", "Course", new { studentId = user.Id });
 
-                ////redirect role base condition//
-
-
-                //if (roles.Contains("Admin"))
-                //{
-                //    return RedirectToAction("Dashboard", "Admin");
-                //}
-                //else if (roles.Contains("Instructor"))
-                //{
-                //    return RedirectToAction("Index", "InstructorDashboard");
-                //}
-                //else if (roles.Contains("Student"))
-                //{
-                //    return RedirectToAction("StudentCourse", "Course", new { studentID = user.Id });
-                //}
-                //else
-                //{
-                //    // fallback if role is unexpected
-                //    return RedirectToAction("Index", "Home");
-                //}
+                // Fallback
                 return RedirectToAction("Index", "Home");
             }
 
@@ -177,25 +167,6 @@ namespace ITI.ExamSystem.Controllers
             var currentRoles = await _userManager.GetRolesAsync(currentUser);
             var currentRole = await _roleManager.FindByNameAsync(currentRoles.FirstOrDefault());
 
-            ////valdate it
-            //var selectedRole = await _roleManager.FindByNameAsync(model.SelectedRole);
-            //if (selectedRole == null)
-            //{
-            //    ModelState.AddModelError("", "Invalid role selection");
-            //    return View("Register", model);
-            //}
-
-            //// Convert IDs to integers for comparison
-            //int currentRoleId = int.Parse(currentRole.Id);
-            //int selectedRoleId = int.Parse(selectedRole.Id);
-
-            //// Ensure selected role has lower privilege (higher numeric ID)
-            //if (selectedRoleId <= currentRoleId)
-            //{
-            //    ModelState.AddModelError("", "You cannot create accounts for this role.");
-            //    return View("Register", model);
-            //}
-
             int currentRoleId = int.Parse(currentRole.Id);
 
             var selectedRoles = model.Roles.Where(r => r.IsSelected).ToList();
@@ -246,9 +217,6 @@ namespace ITI.ExamSystem.Controllers
 
             if (result.Succeeded)
             {
-                //await _userManager.AddToRoleAsync(user, selectedRole.Name);
-                //var selectedRoles = model.Roles.Where(r => r.IsSelected).ToList();
-                // Assign to SelectedRole (if single selection)
                 model.SelectedRole = selectedRoles.FirstOrDefault()?.Name;
 
                 await _userManager.AddToRolesAsync(user,model.Roles.Where(r=>r.IsSelected==true).Select(r => r.Name));
@@ -265,9 +233,6 @@ namespace ITI.ExamSystem.Controllers
                    Please confirm your email to activate your account by clicking <a href='{confirmationLink}'>here</a>.";
 
                 await _emailSender.SendEmailAsync(user.Email, "Activate Your Exam Account", message);
-
-
-                //await _userManager.AddToRoleAsync(user, selectedRole.Name);
 
                 //--
                 var customUser = new User
@@ -286,7 +251,7 @@ namespace ITI.ExamSystem.Controllers
                     .Include(u => u.Roles)
                     .FirstOrDefaultAsync(u => u.IdentityUserId == user.Id);
 
-                var selectedRoleName = model.Role;
+                var selectedRoleName = model.SelectedRole;
 
                 var dbRole = await _db.Roles
                     .FirstOrDefaultAsync(r => r.RoleName.ToLower() == selectedRoleName.ToLower());
